@@ -1,20 +1,16 @@
-import { ExecutionSteps } from "@interfaces/executionPlatforms/executionPlatforms";
-
-
 export class ExectionPlatform
 {
-    private executionSteps: ExecutionSteps;
+    private platformName: string;
 
-    constructor()
+    constructor(platformName: string) 
     {
-        this.executionSteps = [];
+      this.platformName = platformName;
     }
 
-    public run(...args: any)
+    public run()
     {
-        if(args) console.log(this.executionSteps);
         var spawn = require('child_process').spawn;
-        var proc = spawn('common/gradle.sh');
+        var proc = spawn('common/platforms/' + this.platformName + '/run.sh');
     
         proc.stdout.on('data', function(data: any) {
           process.stdout.write(data);
