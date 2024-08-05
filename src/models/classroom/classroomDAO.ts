@@ -1,15 +1,12 @@
 import { Classroom } from "@controllers/classroom/classroom";
 import { DAO } from "@interfaces/controllers/DAO";
-import { DBConnection } from "@interfaces/controllers/DB/DBConnection";
+import dbConnection from "@utils/dbConnection";
 
 export class ClassroomDAO implements DAO<Classroom> // Must return Classroom object!!!
 {
-    private db;
+    private db = dbConnection;
 
-    constructor()
-    {
-        this.db = DBConnection.getInstance().getDB();
-    }
+    constructor() { }
 
     create(entity: Classroom): Classroom {
         throw new Error("Method not implemented." + entity);

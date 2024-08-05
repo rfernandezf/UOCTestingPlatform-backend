@@ -1,6 +1,6 @@
 
 
-export interface DB
+export interface GenericDBConnection
 {
     db: any;
     getConnection(): any;

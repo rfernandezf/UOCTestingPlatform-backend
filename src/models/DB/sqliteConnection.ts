@@ -1,8 +1,8 @@
 import sqlite3 from 'sqlite3';
-import { DB } from "@interfaces/controllers/DB/DB";
+import { GenericDBConnection } from "@interfaces/controllers/DB/GenericDBConnection";
 
 
-export class SQLiteConnection implements DB
+export class SQLiteConnection implements GenericDBConnection
 {
     db: sqlite3.Database;
 
