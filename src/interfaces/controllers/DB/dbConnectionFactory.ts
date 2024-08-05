@@ -1,7 +1,6 @@
 import { GenericDBConnection } from "./GenericDBConnection";
 
-export abstract class DBConnectionFactory {
-
+export abstract class DBConnectionFactory 
+{
     abstract createConnection() : GenericDBConnection;
-
-  }
+}

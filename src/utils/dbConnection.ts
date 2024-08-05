@@ -1,4 +1,4 @@
-import { SQLiteConnectionFactory } from "@interfaces/controllers/DB/sqliteConnectionFactory";
+import { SQLiteConnectionFactory } from "@models/DB/sqliteConnectionFactory";
 
 let dbConnectionFactory = new SQLiteConnectionFactory();
 let dbConnection = dbConnectionFactory.createConnection().getConnection();

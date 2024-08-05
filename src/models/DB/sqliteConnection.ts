@@ -11,7 +11,7 @@ export class SQLiteConnection implements GenericDBConnection
     };
 
     initConnection(): void {
-        if(!this.db) this.db = new sqlite3.Database("./common/test.sqlite", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE | sqlite3.OPEN_FULLMUTEX, (err: Error | null) => 
+        if(!this.db) this.db = new sqlite3.Database("./common/database.sqlite", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE | sqlite3.OPEN_FULLMUTEX, (err: Error | null) => 
         { 
             console.log('Error initializing SQLite3 engine: ', err); 
         });

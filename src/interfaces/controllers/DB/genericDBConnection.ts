@@ -1,5 +1,3 @@
-
-
 export interface GenericDBConnection
 {
     db: any;

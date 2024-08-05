@@ -1,5 +1,5 @@
 import { SQLiteConnection } from "@models/DB/sqliteConnection";
-import { DBConnectionFactory } from "./DBConnectionFactory";
+import { DBConnectionFactory } from "../../interfaces/controllers/DB/DBConnectionFactory";
 
 export class SQLiteConnectionFactory implements DBConnectionFactory
 {    
