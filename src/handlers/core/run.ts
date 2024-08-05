@@ -1,5 +1,5 @@
-import { Classroom } from '@controllers/classroom/classroom';
 import { ExectionPlatform } from '@controllers/executionPlatform/executionPlatform';
+import { ClassroomDAO } from '@models/classroom/classroomDAO';
 import express from 'express';
 
 export const runTest = async (_req: express.Request, res: express.Response) => {
@@ -9,5 +9,6 @@ export const runTest = async (_req: express.Request, res: express.Response) => {
 
     executionPlatform.run();
 
-    new Classroom();
+    new ClassroomDAO().get(1);
+
   }

@@ -18,7 +18,12 @@ export class ClassroomDAO implements DAO<Classroom> // Must return Classroom obj
         throw new Error("Method not implemented." + entity);
     }
     get(id: number): Classroom {
-        throw new Error("Method not implemented." + id);
+        this.db.get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows) => { 
+            console.log('Err:',  err);
+            console.log('----> CLASSROOMS: ', rows);
+        });
+        
+        return new Classroom();
     }
     getAll(): Set<Classroom> {
         throw new Error("Method not implemented.");
