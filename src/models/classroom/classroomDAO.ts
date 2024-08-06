@@ -1,4 +1,5 @@
 import { Classroom } from "@controllers/classroom/classroom";
+import { ClassroomResponse } from "@interfaces/controllers/classroom/classroom";
 import { DAO } from "@interfaces/controllers/DAO";
 import dbConnection from "@utils/dbConnection";
 
@@ -8,26 +9,29 @@ export class ClassroomDAO implements DAO<Classroom> // Must return Classroom obj
 
     constructor() { }
 
-    create(entity: Classroom): Classroom {
+    create(entity: Classroom): Promise<Classroom> {
         throw new Error("Method not implemented." + entity);
     }
-    update(entity: Classroom): Classroom {
+
+    update(entity: Classroom): Promise<Classroom> {
         throw new Error("Method not implemented." + entity);
     }
+
     delete(entity: Classroom): void {
         throw new Error("Method not implemented." + entity);
     }
-    get(id: number): Classroom {
-        this.db.get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows) => { 
-            console.log('Err:',  err);
-            console.log('----> CLASSROOMS: ', rows);
+
+    async get(id: number): Promise<Classroom> {
+        return new Promise((resolve, reject) => {
+            this.db.get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows: ClassroomResponse) => { 
+                if(err) reject(err);
+
+                resolve(new Classroom(rows.id, rows.name, rows.description, rows.assessment_id));
+            });
         });
-        
-        return new Classroom();
     }
-    getAll(): Set<Classroom> {
+
+    getAll(): Promise<Set<Classroom>> {
         throw new Error("Method not implemented.");
     }
-    test(){this.db.close();}
-
 }
