@@ -20,11 +20,23 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
     }
 
     update(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
-        throw new Error("Method not implemented." + entity);
+        return new Promise((resolve, reject) => {
+            this.db.run("UPDATE ExecutionPlatforms SET name = ? WHERE id = ?", entity.name, entity.id, (err: any, rows: ExecutionPlatformResponse) => { 
+                if(err) reject(err);
+
+                resolve(entity);
+            });
+        });
     }
 
-    delete(entity: ExecutionPlatform): void {
-        throw new Error("Method not implemented." + entity);
+    delete(entity: ExecutionPlatform): Promise<void | Error> {
+        return new Promise((resolve, reject) => {
+            this.db.run("DELETE FROM ExecutionPlatforms WHERE id = ?", entity.id, (err: any, rows: ExecutionPlatformResponse) => { 
+                if(err) reject(err);
+
+                resolve();
+            });
+        });
     }
 
     async get(id: number): Promise<ExecutionPlatform> {

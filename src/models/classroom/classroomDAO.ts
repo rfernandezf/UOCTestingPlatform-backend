@@ -19,7 +19,7 @@ export class ClassroomDAO implements DAO<Classroom>
         throw new Error("Method not implemented." + entity);
     }
 
-    delete(entity: Classroom): void {
+    delete(entity: Classroom): Promise<void | Error> {
         throw new Error("Method not implemented." + entity);
     }
 
