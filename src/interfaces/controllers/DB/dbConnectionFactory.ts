@@ -1,4 +1,4 @@
-import { GenericDBConnection } from "./GenericDBConnection";
+import { GenericDBConnection } from "./genericDBConnection";
 
 export abstract class DBConnectionFactory 
 {

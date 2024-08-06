@@ -1,10 +1,10 @@
 /* ----- DROP OLD TABLES IF EXISTS ----- */
-DROP TABLE IF EXISTS ExecutionPlatforms;
-DROP TABLE IF EXISTS Assessments;
-DROP TABLE IF EXISTS Classrooms;
-DROP TABLE IF EXISTS UserRoles;
-DROP TABLE IF EXISTS Users;
-DROP TABLE IF EXISTS Classrooms_2_users;
+-- DROP TABLE IF EXISTS ExecutionPlatforms;
+-- DROP TABLE IF EXISTS Assessments;
+-- DROP TABLE IF EXISTS Classrooms;
+-- DROP TABLE IF EXISTS UserRoles;
+-- DROP TABLE IF EXISTS Users;
+-- DROP TABLE IF EXISTS Classrooms_2_users;
 
 /* ----- CREATE NEW TABLES ----- */
 CREATE TABLE ExecutionPlatforms (
@@ -56,15 +56,15 @@ INSERT INTO UserRoles VALUES (1, 'ADMIN');
 INSERT INTO UserRoles VALUES (2, 'STUDENT');
 
 /* ----- TEST DATA ----- */
-INSERT INTO ExecutionPlatforms (name) VALUES ('Test');
+-- INSERT INTO ExecutionPlatforms (name) VALUES ('Test');
 
-INSERT INTO Assessments (publish_date, expiration_date, platform_id, test_path) 
-VALUES (0, 0, 1, '/my/path/here');
+-- INSERT INTO Assessments (publish_date, expiration_date, platform_id, test_path) 
+-- VALUES (0, 0, 1, '/my/path/here');
 
-INSERT INTO Classrooms (name, description, assessment_id) 
-VALUES ('Test classroom', 'My description comes here', 1);
+-- INSERT INTO Classrooms (name, description, assessment_id) 
+-- VALUES ('Test classroom', 'My description comes here', 1);
 
-INSERT INTO Users (name, surnames, email, password, role_id)
-VALUES ('Rafael', 'Fernández Flores', 'rfernandezflo@uoc.edu', '1234', 1);
+-- INSERT INTO Users (name, surnames, email, password, role_id)
+-- VALUES ('Rafael', 'Fernández Flores', 'rfernandezflo@uoc.edu', '1234', 1);
 
-INSERT INTO Classrooms_2_users VALUES (1, 1);
+-- INSERT INTO Classrooms_2_users VALUES (1, 1);
