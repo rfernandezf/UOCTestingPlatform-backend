@@ -1,16 +1,33 @@
-export class ExectionPlatform
+export class ExecutionPlatform
 {
-    private platformName: string;
+    private _id: number;
+    private _name: string;
 
-    constructor(platformName: string) 
+    constructor(id: number, name: string) 
     {
-      this.platformName = platformName;
+      this._id = id;
+      this._name = name;
     }
 
+    get id(): number
+    {
+        return this._id;
+    }
+
+    get name(): string
+    {
+        return this._name;
+    }
+
+    set name(name: string)
+    {
+        this._name = name;
+    }
+    
     public run()
     {
         var spawn = require('child_process').spawn;
-        var proc = spawn('common/platforms/' + this.platformName + '/run.sh');
+        var proc = spawn('common/platforms/' + this._name + '/run.sh');
     
         proc.stdout.on('data', function(data: any) {
           process.stdout.write(data);

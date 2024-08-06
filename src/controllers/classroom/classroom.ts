@@ -34,23 +34,18 @@ export class Classroom
         return this._assessment;
     }
 
-    set id(id: number)
-    {
-        this.id = id;
-    }
-
     set name(name: string)
     {
-        this.name = name;
+        this._name = name;
     }
 
     set description(description: string)
     {
-        this.description = description;
+        this._description = description;
     }
 
     set assessment(assessment: any)
     {
-        this.assessment = assessment;
+        this._assessment = assessment;
     }
 }

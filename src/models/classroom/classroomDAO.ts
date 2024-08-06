@@ -3,14 +3,16 @@ import { ClassroomResponse } from "@interfaces/controllers/classroom/classroom";
 import { DAO } from "@interfaces/controllers/DAO";
 import dbConnection from "@utils/dbConnection";
 
-export class ClassroomDAO implements DAO<Classroom> // Must return Classroom object!!!
+export class ClassroomDAO implements DAO<Classroom>
 {
     private db = dbConnection;
 
     constructor() { }
 
     create(entity: Classroom): Promise<Classroom> {
-        throw new Error("Method not implemented." + entity);
+        return new Promise((resolve, reject) => {
+            //INSERT INTO Classrooms (name, description, assessment_id) VALUES ('Test classroom', 'My description comes here', 1);
+        });
     }
 
     update(entity: Classroom): Promise<Classroom> {
