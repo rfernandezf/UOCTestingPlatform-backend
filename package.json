@@ -9,7 +9,7 @@
     "build": "tsc -p .",
     "prettier": "prettier --write src/**/*.ts",
     "lint": "npm run prettier && eslint src/**/*.ts",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register test/**/*.ts src/**/*.spec.ts"
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register test/**/*.ts"
   },
   "author": "",
   "license": "ISC",

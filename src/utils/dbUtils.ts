@@ -32,3 +32,16 @@ export function parseSQLFile(dataSql: string)
 
     return sqlQueries;
 }
+
+export function epochToDate(epoch: number): Date
+{
+    let date = new Date(0)
+    date.setUTCSeconds(epoch);
+
+    return date;
+}
+
+export function dateToEpoch(date: Date): number
+{
+    return date.getTime() / 1000;
+}

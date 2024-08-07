@@ -14,6 +14,8 @@ CREATE TABLE ExecutionPlatforms (
 
 CREATE TABLE Assessments (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT UNIQUE NOT NULL,
+	description TEXT NOT NULL,
 	publish_date INTEGER NOT NULL,
 	expiration_date INTEGER NOT NULL,
 	platform_id INTEGER,
@@ -23,7 +25,7 @@ CREATE TABLE Assessments (
 
 CREATE TABLE Classrooms (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name TEXT NOT NULL,
+	name TEXT UNIQUE NOT NULL,
 	description TEXT NOT NULL,
 	assessment_id INTEGER,
 	FOREIGN KEY(assessment_id) REFERENCES Assessments(assessment_id)
@@ -38,7 +40,7 @@ CREATE TABLE Users (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT NOT NULL,
 	surnames TEXT NOT NULL,
-	email TEXT NOT NULL,
+	email TEXT UNIQUE NOT NULL,
 	password TEXT NOT NULL,
 	role_id INTEGER,
 	FOREIGN KEY(role_id) REFERENCES UserRoles(id)

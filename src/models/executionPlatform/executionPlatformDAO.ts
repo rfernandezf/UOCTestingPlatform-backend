@@ -44,10 +44,10 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     async get(id: number): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).get('SELECT * FROM ExecutionPlatforms WHERE ID = ?', id, function(err: Error | null, rows: ExecutionPlatformResponse) { 
+            (await this.db).get('SELECT * FROM ExecutionPlatforms WHERE ID = ?', id, function(err: Error | null, row: ExecutionPlatformResponse) { 
                 if(err) reject(err);
 
-                if(rows) resolve(new ExecutionPlatform(rows.id, rows.name));
+                if(row) resolve(new ExecutionPlatform(row.id, row.name));
                 else reject();
             });
         });

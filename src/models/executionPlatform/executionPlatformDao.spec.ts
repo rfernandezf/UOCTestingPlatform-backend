@@ -13,8 +13,8 @@ describe('Execution Platform DAO testing', function () {
     let pythonPlatform = new ExecutionPlatform(0, 'python');
     let csharpPlatform = new ExecutionPlatform(0, 'csharp');
 
-    describe('Insert one element', function () {
-        it('Should correctly insert the element', async function () {
+    describe('Insert elements', function () {
+        it('Should correctly insert the elements', async function () {
 
             await executionPlatformDAO.create(javaPlatform)
             .then((res: ExecutionPlatform)=> {
