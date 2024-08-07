@@ -9,7 +9,6 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 import { handleError } from './helpers/error';
 import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
-
 const app: express.Application = express();
 
 app.use(httpLogger);

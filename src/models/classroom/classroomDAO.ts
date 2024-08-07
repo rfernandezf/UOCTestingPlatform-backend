@@ -24,8 +24,8 @@ export class ClassroomDAO implements DAO<Classroom>
     }
 
     async get(id: number): Promise<Classroom> {
-        return new Promise((resolve, reject) => {
-            this.db.get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows: ClassroomResponse) => { 
+        return new Promise(async (resolve, reject) => {
+            (await this.db).get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows: ClassroomResponse) => { 
                 if(err) reject(err);
 
                 resolve(new Classroom(rows.id, rows.name, rows.description, rows.assessment_id));
@@ -33,7 +33,7 @@ export class ClassroomDAO implements DAO<Classroom>
         });
     }
 
-    getAll(): Promise<Set<Classroom>> {
+    getAll(): Promise<Array<Classroom>> {
         throw new Error("Method not implemented.");
     }
 }

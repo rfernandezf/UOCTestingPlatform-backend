@@ -4,5 +4,5 @@ export interface DAO<T>
   update(entity: T): Promise<T>;
   delete(entity: T): Promise<void | Error>;
   get(id: number): Promise<T>;
-  getAll(): Promise<Set<T>>;
+  getAll(): Promise<Array<T>>;
 }
