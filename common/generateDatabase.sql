@@ -19,16 +19,16 @@ CREATE TABLE Assessments (
 	publish_date INTEGER NOT NULL,
 	expiration_date INTEGER NOT NULL,
 	platform_id INTEGER,
+	classroom_id INTEGER,
 	test_path TEXT NOT NULL,
-	FOREIGN KEY(platform_id) REFERENCES ExecutionPlatforms(id)
+	FOREIGN KEY(platform_id) REFERENCES ExecutionPlatforms(id),
+	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id)
 );
 
 CREATE TABLE Classrooms (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT UNIQUE NOT NULL,
-	description TEXT NOT NULL,
-	assessment_id INTEGER,
-	FOREIGN KEY(assessment_id) REFERENCES Assessments(assessment_id)
+	description TEXT NOT NULL
 );
 
 CREATE TABLE UserRoles (

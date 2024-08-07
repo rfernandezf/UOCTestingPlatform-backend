@@ -8,9 +8,10 @@ export class Assessment
     private _publishDate: Date;
     private _expirationDate: Date;
     private _executionPlatformID: number;
+    private _classroomID: number;
     private _testPath: string;
 
-    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, testPath: string) 
+    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string) 
     {
       this._id = id;
       this._name = name;
@@ -18,6 +19,7 @@ export class Assessment
       this._publishDate = publishDate;
       this._expirationDate = expirationDate;
       this._executionPlatformID = executionPlatformID;
+      this._classroomID = classroomID;
       this._testPath = testPath;
     }
 
@@ -49,6 +51,11 @@ export class Assessment
     get executionPlatformID(): number
     {
         return this._executionPlatformID;
+    }
+
+    get classroomID(): number
+    {
+        return this._classroomID;
     }
 
     get testPath(): string
@@ -84,6 +91,11 @@ export class Assessment
     set executionPlatformID(executionPlatformID: number)
     {
         this._executionPlatformID = executionPlatformID;
+    }
+
+    set classroomID(classroomID: number)
+    {
+        this._classroomID = classroomID;
     }
 
     set testPath(testPath: string)

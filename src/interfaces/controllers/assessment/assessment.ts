@@ -5,5 +5,6 @@ export interface AssessmentResponse {
     publish_date: number,
     expiration_date: number,
     platform_id: number,
+    classroom_id: number,
     test_path: string
 }

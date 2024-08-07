@@ -13,8 +13,8 @@ export class AssessmentDAO implements DAO<Assessment>
 
     create(entity: Assessment): Promise<Assessment> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("INSERT INTO Assessments (name, description, publish_date, expiration_date, platform_id, test_path) VALUES (?, ?, ?, ?, ?, ?)", 
-                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.testPath], function (this: RunResult, err: Error | null) { 
+            (await this.db).run("INSERT INTO Assessments (name, description, publish_date, expiration_date, platform_id, classroom_id, test_path) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.testPath], function (this: RunResult, err: Error | null) { 
                 if(this.lastID) entity.id = this.lastID;
 
                 if(err) reject(err);
@@ -26,8 +26,8 @@ export class AssessmentDAO implements DAO<Assessment>
 
     update(entity: Assessment): Promise<Assessment> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE Assessments SET name = ?, description = ?, publish_date = ?, expiration_date = ?, platform_id = ?, test_path = ? WHERE id = ?", 
-                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.testPath, entity.id], function (this: RunResult, err: Error | null) {                
+            (await this.db).run("UPDATE Assessments SET name = ?, description = ?, publish_date = ?, expiration_date = ?, platform_id = ?, classroom_id = ?, test_path = ? WHERE id = ?", 
+                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.testPath, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
 
                 resolve(entity);
@@ -50,7 +50,7 @@ export class AssessmentDAO implements DAO<Assessment>
             (await this.db).get('SELECT * FROM Assessments WHERE id = ?', id, function(err: Error | null, row: AssessmentResponse) { 
                 if(err) reject(err);
                 
-                if(row) resolve(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.test_path));
+                if(row) resolve(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.classroom_id, row.test_path));
                 else reject();
             });
         });
@@ -64,7 +64,7 @@ export class AssessmentDAO implements DAO<Assessment>
                 let response: Array<Assessment> = [];
 
                 rows.forEach((row: AssessmentResponse) => {
-                    response.push(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.test_path));
+                    response.push(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.classroom_id, row.test_path));
                 })
 
                 if(response && response.length > 0) resolve(response);

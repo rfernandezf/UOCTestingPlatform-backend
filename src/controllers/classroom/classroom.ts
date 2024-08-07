@@ -4,14 +4,12 @@ export class Classroom
     private _id: number;
     private _name: string;
     private _description: string;
-    private _assessment: any;
 
-    constructor(id: number, name: string, description: string, assessment: any)
+    constructor(id: number, name: string, description: string)
     {
         this._id = id;
         this._name = name;
         this._description = description;
-        this._assessment = assessment;
     }
 
     get id(): number
@@ -29,9 +27,9 @@ export class Classroom
         return this._description;
     }
 
-    get assessment(): any
+    set id(id: number)
     {
-        return this._assessment;
+        this._id = id;
     }
 
     set name(name: string)
@@ -43,9 +41,5 @@ export class Classroom
     {
         this._description = description;
     }
-
-    set assessment(assessment: any)
-    {
-        this._assessment = assessment;
-    }
+    
 }

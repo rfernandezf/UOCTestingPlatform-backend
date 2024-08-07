@@ -10,9 +10,9 @@ function iThrowError(err: string) {
 describe('Assessment DAO testing', function () {
     let assessmentDAO: AssessmentDAO = new AssessmentDAO();
 
-    let assessmentJava = new Assessment(0, 'Java Assessment', 'New PAC assessment in Java', new Date(), new Date(), 1, 'path/here');
-    let assessmentPython = new Assessment(0, 'Python Assessment', 'New PAC assessment in Python', new Date(), new Date(), 2, 'path/here');
-    let assessmentCSharp = new Assessment(0, 'C# Assessment', 'New PAC assessment in C#', new Date(), new Date(), 3, 'path/here');
+    let assessmentJava = new Assessment(0, 'Java Assessment', 'New PAC assessment in Java', new Date(), new Date(), 1, 1, 'path/here');
+    let assessmentPython = new Assessment(0, 'Python Assessment', 'New PAC assessment in Python', new Date(), new Date(), 2, 2, 'path/here');
+    let assessmentCSharp = new Assessment(0, 'C# Assessment', 'New PAC assessment in C#', new Date(), new Date(), 3, 3, 'path/here');
 
     describe('Insert elements', function () {
         it('Should correctly insert the elements', async function () {
@@ -24,6 +24,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentJava.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentJava.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(assessmentJava.executionPlatformID, res.executionPlatformID);
+                assert.equal(assessmentJava.classroomID, res.classroomID);
                 assert.equal(assessmentJava.testPath, res.testPath);
                 assessmentJava = res;
             })
@@ -38,6 +39,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentPython.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentPython.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(assessmentPython.executionPlatformID, res.executionPlatformID);
+                assert.equal(assessmentPython.classroomID, res.classroomID);
                 assert.equal(assessmentPython.testPath, res.testPath);
                 assessmentPython = res;
             })
@@ -52,6 +54,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentCSharp.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentCSharp.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(assessmentCSharp.executionPlatformID, res.executionPlatformID);
+                assert.equal(assessmentCSharp.classroomID, res.classroomID);
                 assert.equal(assessmentCSharp.testPath, res.testPath);
                 assessmentCSharp = res;
             })
@@ -70,6 +73,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentPython.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentPython.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(assessmentPython.executionPlatformID, res.executionPlatformID);
+                assert.equal(assessmentPython.classroomID, res.classroomID);
                 assert.equal(assessmentPython.testPath, res.testPath);
             })
             .catch(() => {
@@ -85,6 +89,7 @@ describe('Assessment DAO testing', function () {
             assessmentPython.publishDate = new Date();
             assessmentPython.expirationDate = new Date();
             assessmentPython.executionPlatformID = 5;
+            assessmentPython.classroomID = 5;
             assessmentPython.testPath = 'modified/path/here';
 
             await assessmentDAO.update(assessmentPython)
@@ -94,6 +99,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentPython.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentPython.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(assessmentPython.executionPlatformID, res.executionPlatformID);
+                assert.equal(assessmentPython.classroomID, res.classroomID);
                 assert.equal(assessmentPython.testPath, res.testPath);
                 assessmentPython = res;
             })
@@ -109,6 +115,7 @@ describe('Assessment DAO testing', function () {
                 assert.equal(assessmentPython.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentPython.expirationDate.toDateString(), res.expirationDate.toDateString());
                 assert.equal(5, res.executionPlatformID);
+                assert.equal(5, res.classroomID);
                 assert.equal('modified/path/here', res.testPath);
             })
             .catch(() => {
