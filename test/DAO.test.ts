@@ -4,3 +4,4 @@ if (fs.existsSync("./common/database.sqlite")) fs.unlinkSync("./common/database.
 
 import "@models/executionPlatform/executionPlatformDAO.spec"
 import "@models/assessment/assessmentDAO.spec"
+import "@models/user/userDAO.spec"

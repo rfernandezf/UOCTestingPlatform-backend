@@ -11,26 +11,20 @@ export class ClassroomDAO implements DAO<Classroom>
 
     create(entity: Classroom): Promise<Classroom> {
         return new Promise((resolve, reject) => {
-            //INSERT INTO Classrooms (name, description, assessment_id) VALUES ('Test classroom', 'My description comes here', 1);
+            throw new Error("Method not implemented.");
         });
     }
 
     update(entity: Classroom): Promise<Classroom> {
-        throw new Error("Method not implemented." + entity);
+        throw new Error("Method not implemented.");
     }
 
     delete(entity: Classroom): Promise<void> {
-        throw new Error("Method not implemented." + entity);
+        throw new Error("Method not implemented.");
     }
 
     async get(id: number): Promise<Classroom> {
-        return new Promise(async (resolve, reject) => {
-            (await this.db).get('SELECT * FROM Classrooms WHERE ID = ?', id, (err, rows: ClassroomResponse) => { 
-                if(err) reject(err);
-
-                resolve(new Classroom(rows.id, rows.name, rows.description, rows.assessment_id));
-            });
-        });
+        throw new Error("Method not implemented.");
     }
 
     getAll(): Promise<Array<Classroom>> {
