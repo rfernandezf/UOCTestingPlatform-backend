@@ -1,5 +1,5 @@
-import { Classroom } from "@controllers/classroom/classroom";
-import { ClassroomResponse } from "@interfaces/controllers/classroom/classroom";
+import { Classroom } from "@controllers/classroom";
+import { ClassroomResponse } from "@interfaces/controllers/classroom";
 import { DAO } from "@interfaces/controllers/DAO";
 import dbConnection from "@utils/dbConnection";
 import { RunResult } from "sqlite3";

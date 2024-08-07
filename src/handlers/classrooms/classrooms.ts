@@ -1,4 +1,4 @@
-import { ClassroomDAO } from '@models/classroom/classroomDAO';
+import { ClassroomDAO } from '@models/classroomDAO';
 import express from 'express';
 
 export const classrooms = async (_req: express.Request, res: express.Response) => {

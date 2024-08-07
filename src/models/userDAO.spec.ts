@@ -1,7 +1,7 @@
 
-import { User } from "@controllers/user/user";
+import { User } from "@controllers/user";
 import { UserDAO } from "./userDAO";
-import { UserRole } from "@interfaces/controllers/user/user";
+import { UserRole } from "@interfaces/controllers/user";
 
 var assert = require('assert');
 function iThrowError(err: string) {

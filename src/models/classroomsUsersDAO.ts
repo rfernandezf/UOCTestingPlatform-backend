@@ -1,7 +1,7 @@
-import { Classroom } from "@controllers/classroom/classroom";
-import { User } from "@controllers/user/user";
-import { ClassroomResponse } from "@interfaces/controllers/classroom/classroom";
-import { UserResponse } from "@interfaces/controllers/user/user";
+import { Classroom } from "@controllers/classroom";
+import { User } from "@controllers/user";
+import { ClassroomResponse } from "@interfaces/controllers/classroom";
+import { UserResponse } from "@interfaces/controllers/user";
 import dbConnection from "@utils/dbConnection";
 import { RunResult } from "sqlite3";
 

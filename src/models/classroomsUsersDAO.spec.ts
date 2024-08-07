@@ -1,8 +1,8 @@
 import { ClassroomsUsersDAO } from "./classroomsUsersDAO";
-import { ClassroomDAO } from "./classroom/classroomDAO";
-import { UserDAO } from "./user/userDAO";
-import { User } from "@controllers/user/user";
-import { Classroom } from "@controllers/classroom/classroom";
+import { ClassroomDAO } from "./classroomDAO";
+import { UserDAO } from "./userDAO";
+import { User } from "@controllers/user";
+import { Classroom } from "@controllers/classroom";
 
 var assert = require('assert');
 function iThrowError(err: string) {
@@ -120,5 +120,5 @@ describe('Classrooms-Users DAO testing', function () {
             });
         });
     });
-    
+
 });

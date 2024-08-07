@@ -1,6 +1,6 @@
-import { ExecutionPlatform } from "@controllers/executionPlatform/executionPlatform";
+import { ExecutionPlatform } from "@controllers/executionPlatform";
 import { DAO } from "@interfaces/controllers/DAO";
-import { ExecutionPlatformResponse } from "@interfaces/controllers/executionPlatform/executionPlatform";
+import { ExecutionPlatformResponse } from "@interfaces/controllers/executionPlatform";
 import dbConnection from "@utils/dbConnection";
 import { RunResult } from "sqlite3";
 

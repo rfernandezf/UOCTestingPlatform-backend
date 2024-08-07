@@ -1,5 +1,5 @@
-import { Assessment } from "@controllers/assessment/assessment";
-import { AssessmentResponse } from "@interfaces/controllers/assessment/assessment";
+import { Assessment } from "@controllers/assessment";
+import { AssessmentResponse } from "@interfaces/controllers/assessment";
 import { DAO } from "@interfaces/controllers/DAO";
 import dbConnection from "@utils/dbConnection";
 import { dateToEpoch, epochToDate } from "@utils/dbUtils";

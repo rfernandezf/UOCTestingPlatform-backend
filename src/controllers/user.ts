@@ -1,4 +1,4 @@
-import { UserRole } from "@interfaces/controllers/user/user";
+import { UserRole } from "@interfaces/controllers/user";
 
 export class User
 {

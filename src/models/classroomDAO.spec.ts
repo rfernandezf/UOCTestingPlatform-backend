@@ -1,4 +1,4 @@
-import { Classroom } from "@controllers/classroom/classroom";
+import { Classroom } from "@controllers/classroom";
 import { ClassroomDAO } from "./classroomDAO";
 
 var assert = require('assert');

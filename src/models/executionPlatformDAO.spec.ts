@@ -1,4 +1,4 @@
-import { ExecutionPlatform } from "@controllers/executionPlatform/executionPlatform";
+import { ExecutionPlatform } from "@controllers/executionPlatform";
 import { ExecutionPlatformDAO } from "./executionPlatformDAO";
 
 var assert = require('assert');

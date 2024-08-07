@@ -1,4 +1,4 @@
-import { ExecutionPlatform } from '@controllers/executionPlatform/executionPlatform';
+import { ExecutionPlatform } from '@controllers/executionPlatform';
 import express from 'express';
 
 export const runTest = async (_req: express.Request, res: express.Response) => {
