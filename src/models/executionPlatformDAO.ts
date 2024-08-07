@@ -26,16 +26,18 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
         return new Promise(async (resolve, reject) => {
             (await this.db).run("UPDATE ExecutionPlatforms SET name = ? WHERE id = ?", entity.name, entity.id, function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve(entity);
             });
         });
     }
 
-    delete(entity: ExecutionPlatform): Promise<void> {
+    delete(id: number): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM ExecutionPlatforms WHERE id = ?", entity.id, function (this: RunResult, err: Error | null) { 
+            (await this.db).run("DELETE FROM ExecutionPlatforms WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve();
             });
@@ -48,7 +50,7 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
                 if(err) reject(err);
 
                 if(row) resolve(new ExecutionPlatform(row.id, row.name));
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }
@@ -65,7 +67,7 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }

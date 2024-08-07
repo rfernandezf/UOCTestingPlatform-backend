@@ -26,16 +26,18 @@ export class ClassroomDAO implements DAO<Classroom>
         return new Promise(async (resolve, reject) => {
             (await this.db).run("UPDATE Classrooms SET name = ?, description = ? WHERE id = ?", [entity.name, entity.description, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve(entity);
             });
         });
     }
 
-    delete(entity: Classroom): Promise<void> {
+    delete(id: number): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM Classrooms WHERE id = ?", entity.id, function (this: RunResult, err: Error | null) { 
+            (await this.db).run("DELETE FROM Classrooms WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('Element not found'));
 
                 resolve();
             });
@@ -48,7 +50,7 @@ export class ClassroomDAO implements DAO<Classroom>
                 if(err) reject(err);
 
                 if(row) resolve(new Classroom(row.id, row.name, row.description));
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }
@@ -65,7 +67,7 @@ export class ClassroomDAO implements DAO<Classroom>
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }

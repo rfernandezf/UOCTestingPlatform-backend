@@ -83,7 +83,7 @@ describe('Execution Platform DAO testing', function () {
     describe('Delete one element', function () {
         it('Should correctly delete the element', async function () {
             // Delete element
-            await executionPlatformDAO.delete(javaPlatform)
+            await executionPlatformDAO.delete(javaPlatform.id)
             .then(() => {
                 assert.equal(1, 1);
             })

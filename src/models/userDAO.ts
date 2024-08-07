@@ -26,16 +26,18 @@ export class UserDAO implements DAO<User>
         return new Promise(async (resolve, reject) => {
             (await this.db).run("UPDATE Users SET name = ?, surnames = ?, email = ?, password = ?, role_id = ? WHERE id = ?", [entity.name, entity.surnames, entity.email, entity.password, entity.userRole, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve(entity);
             });
         });
     }
 
-    delete(entity: User): Promise<void> {
+    delete(id: number): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM Users WHERE id = ?", entity.id, function (this: RunResult, err: Error | null) { 
+            (await this.db).run("DELETE FROM Users WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('Element not found'));
 
                 resolve();
             });
@@ -48,7 +50,7 @@ export class UserDAO implements DAO<User>
                 if(err) reject(err);
 
                 if(row) resolve(new User(row.id, row.name, row.surnames, row.email, row.password, row.role_id));
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }
@@ -65,7 +67,7 @@ export class UserDAO implements DAO<User>
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }

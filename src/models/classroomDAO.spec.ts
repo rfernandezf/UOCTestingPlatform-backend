@@ -90,7 +90,7 @@ describe('Classroom DAO testing', function () {
     describe('Delete one element', function () {
         it('Should correctly delete the element', async function () {
             // Delete element
-            await classroomDAO.delete(classroom1)
+            await classroomDAO.delete(classroom1.id)
             .then(() => {
                 assert.equal(1, 1);
             })

@@ -29,16 +29,18 @@ export class AssessmentDAO implements DAO<Assessment>
             (await this.db).run("UPDATE Assessments SET name = ?, description = ?, publish_date = ?, expiration_date = ?, platform_id = ?, classroom_id = ?, test_path = ? WHERE id = ?", 
                 [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.testPath, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve(entity);
             });
         });
     }
 
-    delete(entity: Assessment): Promise<void> {
+    delete(id: number): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM Assessments WHERE id = ?", entity.id, function (this: RunResult, err: Error | null) { 
+            (await this.db).run("DELETE FROM Assessments WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('Element not found'));
 
                 resolve();
             });
@@ -51,7 +53,7 @@ export class AssessmentDAO implements DAO<Assessment>
                 if(err) reject(err);
                 
                 if(row) resolve(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.classroom_id, row.test_path));
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }
@@ -68,7 +70,7 @@ export class AssessmentDAO implements DAO<Assessment>
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }

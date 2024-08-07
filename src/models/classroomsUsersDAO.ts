@@ -26,6 +26,8 @@ export class ClassroomsUsersDAO
         return new Promise(async (resolve, reject) => {
             (await this.db).run("DELETE FROM Classrooms_2_users WHERE classroom_id = ? AND user_id = ?", [classroom.id, user.id], function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
+                if(this.changes == 0) reject(new Error('Element not found'));
+
                 resolve();
             });
         });
@@ -44,7 +46,7 @@ export class ClassroomsUsersDAO
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }
@@ -62,7 +64,7 @@ export class ClassroomsUsersDAO
                 })
 
                 if(response && response.length > 0) resolve(response);
-                else reject();
+                else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
     }

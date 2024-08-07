@@ -127,7 +127,7 @@ describe('Assessment DAO testing', function () {
     describe('Delete one element', function () {
         it('Should correctly delete the element', async function () {
             // Delete element
-            await assessmentDAO.delete(assessmentJava)
+            await assessmentDAO.delete(assessmentJava.id)
             .then(() => {
                 assert.equal(1, 1);
             })
