@@ -50,7 +50,8 @@ CREATE TABLE Classrooms_2_users (
 	classroom_id INTEGER,
 	user_id INTEGER,
 	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id),
-	FOREIGN KEY(user_id) REFERENCES Users(id)
+	FOREIGN KEY(user_id) REFERENCES Users(id),
+	CONSTRAINT unique_pair UNIQUE(classroom_id, user_id)
 );
 
 /* ----- INSERTS ----- */
