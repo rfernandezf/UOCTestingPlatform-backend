@@ -2,6 +2,7 @@ import { ExecutionPlatform } from "@controllers/executionPlatform/executionPlatf
 import { DAO } from "@interfaces/controllers/DAO";
 import { ExecutionPlatformResponse } from "@interfaces/controllers/executionPlatform/executionPlatform";
 import dbConnection from "@utils/dbConnection";
+import { RunResult } from "sqlite3";
 
 export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 {
@@ -11,7 +12,9 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     create(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("INSERT INTO ExecutionPlatforms (name) VALUES ('?')", entity.name, (err: any, rows: ExecutionPlatformResponse) => { 
+            (await this.db).run("INSERT INTO ExecutionPlatforms (name) VALUES (?)", entity.name, function (this: RunResult, err: Error | null) { 
+                if(this.lastID) entity.id = this.lastID;
+
                 if(err) reject(err);
 
                 resolve(entity);
@@ -21,7 +24,7 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     update(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE ExecutionPlatforms SET name = ? WHERE id = ?", entity.name, entity.id, (err: any, rows: ExecutionPlatformResponse) => { 
+            (await this.db).run("UPDATE ExecutionPlatforms SET name = ? WHERE id = ?", entity.name, entity.id, function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
 
                 resolve(entity);
@@ -29,9 +32,9 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
         });
     }
 
-    delete(entity: ExecutionPlatform): Promise<void | Error> {
+    delete(entity: ExecutionPlatform): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM ExecutionPlatforms WHERE id = ?", entity.id, (err: any, rows: ExecutionPlatformResponse) => { 
+            (await this.db).run("DELETE FROM ExecutionPlatforms WHERE id = ?", entity.id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
 
                 resolve();
@@ -41,17 +44,18 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     async get(id: number): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).get('SELECT * FROM ExecutionPlatforms WHERE ID = ?', id, (err, rows: ExecutionPlatformResponse) => { 
+            (await this.db).get('SELECT * FROM ExecutionPlatforms WHERE ID = ?', id, function(err: Error | null, rows: ExecutionPlatformResponse) { 
                 if(err) reject(err);
 
-                resolve(new ExecutionPlatform(rows.id, rows.name));
+                if(rows) resolve(new ExecutionPlatform(rows.id, rows.name));
+                else reject();
             });
         });
     }
 
     getAll(): Promise<Array<ExecutionPlatform>> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).all('SELECT * FROM ExecutionPlatforms', (err, rows: Array<ExecutionPlatformResponse>) => { 
+            (await this.db).all('SELECT * FROM ExecutionPlatforms', function(err: Error | null, rows: Array<ExecutionPlatformResponse>) { 
                 if(err) reject(err);
 
                 let response: Array<ExecutionPlatform> = [];
@@ -60,7 +64,8 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
                     response.push(new ExecutionPlatform(row.id, row.name));
                 })
 
-                resolve(response);
+                if(response && response.length > 0) resolve(response);
+                else reject();
             });
         });
     }
