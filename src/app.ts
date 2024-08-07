@@ -3,7 +3,11 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-import http from 'http';
+import * as https from 'https';
+import * as fs from "fs";
+
+const CERT_PATH = "common/certs/server.crt";
+const KEY_PATH = "common/certs/server.key";
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 import { handleError } from './helpers/error';
@@ -16,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/', router);
+app.use('/api/v1/', router);
 
 // catch 404 and forward to error handler
 app.use((_req, _res, next) => {
@@ -29,10 +33,15 @@ const errorHandler: express.ErrorRequestHandler = (err, _req, res) => {
 };
 app.use(errorHandler);
 
-const port = process.env.PORT || '8000';
+const port = process.env.PORT || '8080';
 app.set('port', port);
 
-const server = http.createServer(app);
+const httpsOptions = {
+  key: fs.readFileSync(KEY_PATH),
+  cert: fs.readFileSync(CERT_PATH),
+};
+
+const server = https.createServer(httpsOptions, app);
 
 function onError(error: { syscall: string; code: string }) {
   if (error.syscall !== 'listen') {
