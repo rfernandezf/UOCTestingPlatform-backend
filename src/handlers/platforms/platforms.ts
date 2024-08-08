@@ -16,7 +16,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     }
   }
 
-  export const postPlatforms = async (_req: express.Request, res: express.Response) => {
+  export const postPlatform = async (_req: express.Request, res: express.Response) => {
     try {
       // Validate input
       const validate = ajv.compile(executionPlatformRequestSchema)
@@ -24,7 +24,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
 
       let body: ExecutionPlatformRequest = _req.body;
 
-      let executionPlatform = new ExecutionPlatform(0, body.name)
+      let executionPlatform = new ExecutionPlatform(0, body.name);
       let executionPlatforms = await new ExecutionPlatformDAO();
       executionPlatform = await executionPlatforms.create(executionPlatform);
       res.send(executionPlatform);
@@ -44,7 +44,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let body: ExecutionPlatformRequest = _req.body;
       let id: number = +_req.params.id;
 
-      let executionPlatform = new ExecutionPlatform(id, body.name)
+      let executionPlatform = new ExecutionPlatform(id, body.name);
       let executionPlatforms = await new ExecutionPlatformDAO();
       executionPlatform = await executionPlatforms.update(executionPlatform);
       res.send(executionPlatform);
@@ -55,7 +55,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     }
   }
 
-  export const deletePlatforms = async (_req: express.Request, res: express.Response) => {
+  export const deletePlatform = async (_req: express.Request, res: express.Response) => {
     try {
       let id: number = +_req.params.id;
 

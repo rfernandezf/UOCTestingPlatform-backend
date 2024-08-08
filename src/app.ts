@@ -1,5 +1,5 @@
 import createError from 'http-errors';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -22,13 +22,15 @@ app.use(cookieParser());
 
 app.use('/api/v1/', router);
 
-// catch 404 and forward to error handler
-app.use((_req, _res, next) => {
+// Catch 404 and forward to error handler
+app.use((_err: Error, _req: express.Request, _res: express.Response, next: NextFunction) => {
+  if(_err) return _res.status(400).send({ status: 400, message: _err.message });
+
   next(createError(404));
 });
 
 // error handler
-const errorHandler: express.ErrorRequestHandler = (err, _req, res) => {
+const errorHandler: express.ErrorRequestHandler = (err, _req, res, next) => {
   handleError(err, res);
 };
 app.use(errorHandler);

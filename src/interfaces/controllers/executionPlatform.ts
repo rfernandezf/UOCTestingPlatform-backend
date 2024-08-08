@@ -10,6 +10,7 @@ export interface ExecutionPlatformRequest
 
 export const executionPlatformRequestSchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "required": ["name"],
   "properties": {
       "name": {
           "type": "string"
