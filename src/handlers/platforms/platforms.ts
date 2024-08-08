@@ -1,17 +1,10 @@
 import { ExecutionPlatform } from '@controllers/executionPlatform';
+import { ExecutionPlatformRequest, executionPlatformRequestSchema } from '@interfaces/controllers/executionPlatform';
 import { ExecutionPlatformDAO } from '@models/executionPlatformDAO';
+import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
-
-interface ExecutionPlatformRequest
-{
-  name: string;
-}
-
-interface CustomHTTPError
-{
-  status: number;
-  message: string;
-}
+const Ajv = require("ajv");
+const ajv = new Ajv();
 
 export const getPlatforms = async (_req: express.Request, res: express.Response) => {
     try {
@@ -25,6 +18,10 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
 
   export const postPlatforms = async (_req: express.Request, res: express.Response) => {
     try {
+      // Validate input
+      const validate = ajv.compile(executionPlatformRequestSchema)
+      if (!validate(_req.body)) throw new Error('INPUT_VALIDATION_ERROR');
+
       let body: ExecutionPlatformRequest = _req.body;
 
       let executionPlatform = new ExecutionPlatform(0, body.name)
@@ -40,6 +37,10 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
 
   export const putPlatform = async (_req: express.Request, res: express.Response) => {
     try {
+      // Validate input
+      const validate = ajv.compile(executionPlatformRequestSchema)
+      if (!validate(_req.body)) throw new Error('INPUT_VALIDATION_ERROR');
+
       let body: ExecutionPlatformRequest = _req.body;
       let id: number = +_req.params.id;
 
@@ -84,15 +85,3 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     }
   }
 
-  function parseErrorCode(err: any): CustomHTTPError
-  {
-    let error: CustomHTTPError = {
-      status: 500,
-      message: "Unknown error"
-    };
-
-    if(err.message == 'ELEMENT_NOT_FOUND') { error.status = 404; error.message="Entity not found"; }
-    else if(err.code == 'SQLITE_CONSTRAINT') { error.status = 409; error.message="Entity already exists"; }
-
-    return error;
-  }
