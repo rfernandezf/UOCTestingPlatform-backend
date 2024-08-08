@@ -37,7 +37,7 @@ export class UserDAO implements DAO<User>
         return new Promise(async (resolve, reject) => {
             (await this.db).run("DELETE FROM Users WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                 if(err) reject(err);
-                if(this.changes == 0) reject(new Error('Element not found'));
+                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
                 resolve();
             });

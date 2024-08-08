@@ -44,7 +44,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       let body: ClassroomRequest = _req.body;
       let id: number = +_req.params.id;
 
-      let classroom = new Classroom(0, body.name, body.description);
+      let classroom = new Classroom(id, body.name, body.description);
       let Classrooms = await new ClassroomDAO();
       classroom = await Classrooms.update(classroom);
       res.send(classroom);

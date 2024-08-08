@@ -11,6 +11,8 @@ export function parseErrorCode(err: any): CustomHTTPError
     message: "Unknown error"
   };
 
+  console.log('----> ERROR: ', err)
+
   if(err.message == 'ELEMENT_NOT_FOUND') { error.status = 404; error.message="Entity not found"; }
   else if(err.message == 'INPUT_VALIDATION_ERROR') { error.status = 400; error.message="Input validation error"; }
   else if(err.code == 'SQLITE_CONSTRAINT') { error.status = 409; error.message="Entity already exists"; }
