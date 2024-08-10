@@ -6,7 +6,8 @@ export interface AssessmentResponse {
     expiration_date: number,
     platform_id: number,
     classroom_id: number,
-    test_path: string
+    test_path: string,
+    file_name: string
 }
 
 export interface AssessmentRequest {

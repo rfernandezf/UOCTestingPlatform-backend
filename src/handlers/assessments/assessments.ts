@@ -8,7 +8,6 @@ import express from 'express';
 const Ajv = require("ajv");
 const ajv = new Ajv();
 import * as fs from "fs";
-import yauzl from 'yauzl';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
     try {
@@ -106,42 +105,47 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
         let filePath = "./common/assessments/" + assessment.testPath + "/" + _req.file.originalname;
         fs.writeFileSync(filePath, _req.file.buffer);
 
-        // Uncompress the file and delete the zip
-        yauzl.open(filePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
-          if (err) throw err;
-          zipfile.readEntry();
-          zipfile.on("entry", function(entry: any) {
-            if (/\/$/.test(entry.fileName)) {
-              // Directory file names end with '/'.
-              // Note that entries for directories themselves are optional.
-              // An entry's fileName implicitly requires its parent directories to exist.
-              if (!fs.existsSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName)){
-                fs.mkdirSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName, { recursive: true });
-              }
-              zipfile.readEntry();
-            } 
-            else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
-            else {
-              // file entry
-              zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
-                if (err) throw err;                
+        assessment.fileName = _req.file.originalname;
+        assessments.update(assessment);
+
+        // import * as fs from "fs";
+        // import yauzl from 'yauzl';
+        // // Uncompress the file and delete the zip
+        // yauzl.open(filePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
+        //   if (err) throw err;
+        //   zipfile.readEntry();
+        //   zipfile.on("entry", function(entry: any) {
+        //     if (/\/$/.test(entry.fileName)) {
+        //       // Directory file names end with '/'.
+        //       // Note that entries for directories themselves are optional.
+        //       // An entry's fileName implicitly requires its parent directories to exist.
+        //       if (!fs.existsSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName)){
+        //         fs.mkdirSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName, { recursive: true });
+        //       }
+        //       zipfile.readEntry();
+        //     } 
+        //     else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
+        //     else {
+        //       // file entry
+        //       zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
+        //         if (err) throw err;                
                 
-                var fileStream = fs.createWriteStream("./common/assessments/" + assessment.testPath + "/" + entry.fileName);
-                readStream.pipe(fileStream);
+        //         var fileStream = fs.createWriteStream("./common/assessments/" + assessment.testPath + "/" + entry.fileName);
+        //         readStream.pipe(fileStream);
 
-                readStream.on("end", function() {
-                  zipfile.readEntry();
-                });
+        //         readStream.on("end", function() {
+        //           zipfile.readEntry();
+        //         });
 
-              });
-            }
-          });
-        });
+        //       });
+        //     }
+        //   });
+        // });
 
-        // Delete the zip file
-        if (fs.existsSync(filePath)){
-          fs.unlinkSync(filePath);
-        }
+        // // Delete the zip file
+        // if (fs.existsSync(filePath)){
+        //   fs.unlinkSync(filePath);
+        // }
 
         res.send();
       }
@@ -166,6 +170,9 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       if (fs.existsSync("./common/assessments/" + assessment.testPath)){
         fs.rm("./common/assessments/" + assessment.testPath , { recursive: true }, () => {});
       }
+
+      assessment.fileName = '';
+      assessments.update(assessment);
 
       res.send();
     }

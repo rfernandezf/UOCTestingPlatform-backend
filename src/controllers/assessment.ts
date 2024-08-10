@@ -10,8 +10,9 @@ export class Assessment
     private _executionPlatformID: number;
     private _classroomID: number;
     private _testPath: string;
+    private _fileName: string;
 
-    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string = '') 
+    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string = '', fileName: string = '') 
     {
       this._id = id;
       this._name = name;
@@ -21,6 +22,7 @@ export class Assessment
       this._executionPlatformID = executionPlatformID;
       this._classroomID = classroomID;
       this._testPath = testPath;
+      this._fileName = fileName;
     }
 
     get id(): number
@@ -63,6 +65,11 @@ export class Assessment
         return this._testPath;
     }
 
+    get fileName(): string
+    {
+        return this._fileName;
+    }
+
     set id(id: number)
     {
         this._id = id;
@@ -101,6 +108,11 @@ export class Assessment
     set testPath(testPath: string)
     {
         this._testPath = testPath;
+    }
+
+    set fileName(fileName: string)
+    {
+        this._fileName = fileName;
     }
 
 }
