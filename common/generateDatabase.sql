@@ -47,6 +47,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Classrooms_2_users (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	classroom_id INTEGER,
 	user_id INTEGER,
 	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id),

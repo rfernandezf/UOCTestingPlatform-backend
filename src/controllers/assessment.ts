@@ -11,7 +11,7 @@ export class Assessment
     private _classroomID: number;
     private _testPath: string;
 
-    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string) 
+    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string = '') 
     {
       this._id = id;
       this._name = name;

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-if (fs.existsSync("./common/database.sqlite")) fs.unlinkSync("./common/database.sqlite", (err: any)=> {});
+if (fs.existsSync("./common/database.sqlite")) fs.unlinkSync("./common/database.sqlite");
 
 import "@models/executionPlatformDAO.spec"
 import "@models/classroomDAO.spec"

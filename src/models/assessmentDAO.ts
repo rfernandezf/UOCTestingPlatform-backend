@@ -4,6 +4,8 @@ import { DAO } from "@interfaces/controllers/DAO";
 import dbConnection from "@utils/dbConnection";
 import { dateToEpoch, epochToDate } from "@utils/dbUtils";
 import { RunResult } from "sqlite3";
+import { v4 as uuidv4 } from 'uuid';
+import * as fs from "fs";
 
 export class AssessmentDAO implements DAO<Assessment>
 {
@@ -13,11 +15,22 @@ export class AssessmentDAO implements DAO<Assessment>
 
     create(entity: Assessment): Promise<Assessment> {
         return new Promise(async (resolve, reject) => {
+            let pathNameUUID: string = uuidv4();
+
             (await this.db).run("INSERT INTO Assessments (name, description, publish_date, expiration_date, platform_id, classroom_id, test_path) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.testPath], function (this: RunResult, err: Error | null) { 
-                if(this.lastID) entity.id = this.lastID;
+                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, pathNameUUID], function (this: RunResult, err: Error | null) { 
+                if(this.lastID) 
+                {
+                    entity.id = this.lastID;
+                    entity.testPath = pathNameUUID;
+                }
 
                 if(err) reject(err);
+
+                // Create a folder with the UUID inside assessments folder
+                if (!fs.existsSync("./common/assessments/" + pathNameUUID)){
+                    fs.mkdirSync("./common/assessments/" + pathNameUUID, { recursive: true });
+                }
 
                 resolve(entity);
             });
@@ -26,8 +39,8 @@ export class AssessmentDAO implements DAO<Assessment>
 
     update(entity: Assessment): Promise<Assessment> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE Assessments SET name = ?, description = ?, publish_date = ?, expiration_date = ?, platform_id = ?, classroom_id = ?, test_path = ? WHERE id = ?", 
-                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.testPath, entity.id], function (this: RunResult, err: Error | null) {                
+            (await this.db).run("UPDATE Assessments SET name = ?, description = ?, publish_date = ?, expiration_date = ?, platform_id = ?, classroom_id = ? WHERE id = ?", 
+                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
                 if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
@@ -38,12 +51,27 @@ export class AssessmentDAO implements DAO<Assessment>
 
     delete(id: number): Promise<void> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("DELETE FROM Assessments WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
-                if(err) reject(err);
-                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
+            try
+            {            
+                let assessmentToDelete: Assessment = await this.get(id);
+                let folderToDelete = assessmentToDelete.testPath;
 
-                resolve();
-            });
+                (await this.db).run("DELETE FROM Assessments WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
+                    if(err) reject(err);
+                    if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
+
+                    // Delete created folder and contents
+                    if (fs.existsSync("./common/assessments/" + folderToDelete)){
+                        fs.rm("./common/assessments/" + folderToDelete, { recursive: true }, () => {});
+                    }
+
+                    resolve();        
+                });
+            }
+            catch(err: any)
+            {
+                reject(err);
+            }
         });
     }
 

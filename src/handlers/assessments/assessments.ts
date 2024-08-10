@@ -26,7 +26,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
 
       let body: AssessmentRequest = _req.body;
 
-      let assessment = new Assessment(0, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, body.test_path);
+      let assessment = new Assessment(0, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id);
       let assessments = await new AssessmentDAO();
       assessment = await assessments.create(assessment);
       res.send(assessment);
@@ -46,7 +46,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       let body: AssessmentRequest = _req.body;
       let id: number = +_req.params.id;
 
-      let assessment = new Assessment(id, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, body.test_path);
+      let assessment = new Assessment(id, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id);
       let Assessments = await new AssessmentDAO();
       assessment = await Assessments.update(assessment);
       res.send(assessment);
