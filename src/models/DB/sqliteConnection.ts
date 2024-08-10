@@ -34,6 +34,8 @@ export class SQLiteConnection implements GenericDBConnection
 
             if (!fs.existsSync(dbPath)) await this.generateDatabase(db);
 
+            db.exec("PRAGMA foreign_keys = ON");
+
             resolve(db);
         });
     }    

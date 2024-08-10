@@ -10,7 +10,7 @@ function iThrowError(err: string) {
 describe('Assessment DAO testing', function () {
     let assessmentDAO: AssessmentDAO = new AssessmentDAO();
 
-    let assessmentJava = new Assessment(0, 'Java Assessment', 'New PAC assessment in Java', new Date(), new Date(), 1, 1, 'path/here');
+    let assessmentJava = new Assessment(0, 'Java Assessment', 'New PAC assessment in Java', new Date(), new Date(), 2, 2, 'path/here');
     let assessmentPython = new Assessment(0, 'Python Assessment', 'New PAC assessment in Python', new Date(), new Date(), 2, 2, 'path/here');
     let assessmentCSharp = new Assessment(0, 'C# Assessment', 'New PAC assessment in C#', new Date(), new Date(), 3, 3, 'path/here');
 
@@ -88,8 +88,8 @@ describe('Assessment DAO testing', function () {
             assessmentPython.description = 'Renamed PAC assessment in Python';
             assessmentPython.publishDate = new Date();
             assessmentPython.expirationDate = new Date();
-            assessmentPython.executionPlatformID = 5;
-            assessmentPython.classroomID = 5;
+            assessmentPython.executionPlatformID = 3;
+            assessmentPython.classroomID = 3;
             assessmentPython.testPath = 'modified/path/here';
 
             await assessmentDAO.update(assessmentPython)
@@ -114,8 +114,8 @@ describe('Assessment DAO testing', function () {
                 assert.equal('Renamed PAC assessment in Python', res.description);
                 assert.equal(assessmentPython.publishDate.toDateString(), res.publishDate.toDateString());
                 assert.equal(assessmentPython.expirationDate.toDateString(), res.expirationDate.toDateString());
-                assert.equal(5, res.executionPlatformID);
-                assert.equal(5, res.classroomID);
+                assert.equal(3, res.executionPlatformID);
+                assert.equal(3, res.classroomID);
                 assert.equal('modified/path/here', res.testPath);
             })
             .catch(() => {

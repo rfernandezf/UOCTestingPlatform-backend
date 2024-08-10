@@ -1,5 +1,7 @@
+import { Classroom } from '@controllers/classroom';
 import { User } from '@controllers/user';
 import { UserRequest, userRequestSchema } from '@interfaces/controllers/user';
+import { ClassroomsUsersDAO } from '@models/classroomsUsersDAO';
 import { UserDAO } from '@models/userDAO';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
@@ -85,3 +87,52 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
     }
   }
 
+  export const getClassroomsInUser = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id: number = +_req.params.id;
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
+
+      let classrooms: Array<Classroom> = await classrooms2Users.getClassroomsInUser(id);
+
+      res.send(classrooms);
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
+  export const postUserToClassroom = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id_user: number = +_req.params.id_user;
+      let id_classroom: number = +_req.params.id_classroom;
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
+
+      await classrooms2Users.addUserToClassroom(id_user, id_classroom)
+      .then(() => { res.send(); })
+      .catch((err) => { throw err; });
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
+  export const deleteUserFromClassroom = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id_user: number = +_req.params.id_user;
+      let id_classroom: number = +_req.params.id_classroom;
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
+
+      await classrooms2Users.deleteUserFromClassroom(id_user, id_classroom)
+      .then(() => { res.send(); })
+      .catch((err) => { throw err; });
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }

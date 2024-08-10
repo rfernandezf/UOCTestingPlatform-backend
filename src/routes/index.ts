@@ -2,7 +2,7 @@ import express from 'express';
 import { healthCheck } from '../handlers/healthcheck';
 import { runTest } from '../handlers/core/run';
 import { deletePlatform, getPlatforms, getSinglePlatform, postPlatform, putPlatform } from '@handlers/platforms/platforms';
-import { deleteUser, getSingleUser, getUsers, postUser, putUser } from '@handlers/users/users';
+import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/users/users';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classrooms/classrooms';
 import { deleteAssessment, getAssessments, getSingleAssessment, postAssessment, putAssessment } from '@handlers/assessments/assessments';
 
@@ -23,6 +23,9 @@ router.post('/users', postUser);
 router.get('/users/:id', getSingleUser);
 router.put('/users/:id', putUser);
 router.delete('/users/:id', deleteUser);
+router.get('/users/:id/classrooms', getClassroomsInUser);
+router.post('/users/:id_user/classrooms/:id_classroom', postUserToClassroom);
+router.delete('/users/:id_user/classrooms/:id_classroom', deleteUserFromClassroom);
 
 router.get('/classrooms', getClassrooms);
 router.post('/classrooms', postClassroom);
