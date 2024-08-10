@@ -4,7 +4,8 @@ import { runTest } from '../handlers/core/run';
 import { deletePlatform, getPlatforms, getSinglePlatform, postPlatform, putPlatform } from '@handlers/platforms/platforms';
 import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/users/users';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classrooms/classrooms';
-import { deleteAssessment, getAssessments, getSingleAssessment, postAssessment, putAssessment } from '@handlers/assessments/assessments';
+import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, uploadAssessmentFiles } from '@handlers/assessments/assessments';
+const multer = require('multer');
 
 const router = express.Router();
 
@@ -38,5 +39,7 @@ router.post('/assessments', postAssessment);
 router.get('/assessments/:id', getSingleAssessment);
 router.put('/assessments/:id', putAssessment);
 router.delete('/assessments/:id', deleteAssessment);
+router.post('/assessments/:id/files', multer().single('file'), uploadAssessmentFiles);
+router.delete('/assessments/:id/files', deleteAssessmentFiles);
 
 export default router;

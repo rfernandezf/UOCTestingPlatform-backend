@@ -7,6 +7,8 @@ import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
 const Ajv = require("ajv");
 const ajv = new Ajv();
+import * as fs from "fs";
+import yauzl from 'yauzl';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
     try {
@@ -87,3 +89,88 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
     }
   }
 
+  export const uploadAssessmentFiles = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id: number = +_req.params.id;
+
+      let assessments = await new AssessmentDAO();
+      let assessment = await assessments.get(id);
+
+      // Create a folder with the UUID inside assessments folder
+      if (!fs.existsSync("./common/assessments/" + assessment.testPath)){
+        fs.mkdirSync("./common/assessments/" + assessment.testPath, { recursive: true });
+      }
+      
+      if(_req.file)
+      {
+        let filePath = "./common/assessments/" + assessment.testPath + "/" + _req.file.originalname;
+        fs.writeFileSync(filePath, _req.file.buffer);
+
+        // Uncompress the file and delete the zip
+        yauzl.open(filePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
+          if (err) throw err;
+          zipfile.readEntry();
+          zipfile.on("entry", function(entry: any) {
+            if (/\/$/.test(entry.fileName)) {
+              // Directory file names end with '/'.
+              // Note that entries for directories themselves are optional.
+              // An entry's fileName implicitly requires its parent directories to exist.
+              if (!fs.existsSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName)){
+                fs.mkdirSync("./common/assessments/" + assessment.testPath + "/" + entry.fileName, { recursive: true });
+              }
+              zipfile.readEntry();
+            } 
+            else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
+            else {
+              // file entry
+              zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
+                if (err) throw err;                
+                
+                var fileStream = fs.createWriteStream("./common/assessments/" + assessment.testPath + "/" + entry.fileName);
+                readStream.pipe(fileStream);
+
+                readStream.on("end", function() {
+                  zipfile.readEntry();
+                });
+
+              });
+            }
+          });
+        });
+
+        // Delete the zip file
+        if (fs.existsSync(filePath)){
+          fs.unlinkSync(filePath);
+        }
+
+        res.send();
+      }
+
+      else throw new Error("INPUT_VALIDATION_ERROR");
+    }
+
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+  
+  export const deleteAssessmentFiles = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id: number = +_req.params.id;
+
+      let assessments = await new AssessmentDAO();
+      let assessment = await assessments.get(id);
+
+      // Delete created folder and contents
+      if (fs.existsSync("./common/assessments/" + assessment.testPath)){
+        fs.rm("./common/assessments/" + assessment.testPath , { recursive: true }, () => {});
+      }
+
+      res.send();
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
