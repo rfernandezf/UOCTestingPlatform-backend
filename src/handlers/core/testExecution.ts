@@ -6,6 +6,7 @@ import * as fs from "fs";
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import yauzl from 'yauzl';
+import * as child_process from 'child_process'; 
 
 export class TestExecution
 {
@@ -47,7 +48,9 @@ export class TestExecution
             this._assessment.executionPlatformID
             let executionPlatforms: ExecutionPlatformDAO = new ExecutionPlatformDAO();
             let executionPlatform: ExecutionPlatform = await executionPlatforms.get(this._assessment.executionPlatformID);
-            this.launchScript(executionPlatform.internalName, executionPath);
+
+            await this.launchScript(executionPlatform.internalName, executionPath);
+
         } catch(err) { throw err; }
     }
 
@@ -95,35 +98,42 @@ export class TestExecution
         });
     }
 
-    private launchScript(internalName: string, executionPath: string)
+    private launchScript(internalName: string, executionPath: string): Promise<void>
     {
-        try
-        {
-            let scriptPath: string = path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, internalName, environment.platforms.scriptName);
-
-            if (fs.existsSync(scriptPath)) 
+        return new Promise(async (resolve, reject) => {
+            try
             {
-                fs.copyFileSync(scriptPath, path.join(executionPath, environment.platforms.scriptName));
-                fs.chmodSync(path.join(executionPath, environment.platforms.scriptName), '777');
+                let scriptPath: string = path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, internalName, environment.platforms.scriptName);
 
-                var spawn = require('child_process').spawn;
-                var proc = spawn(path.join(executionPath, environment.platforms.scriptName));
-            
-                proc.stdout.on('data', function(data: any) {
-                    process.stdout.write(data);
-                });
-            
-                proc.stderr.on('data', function(data: any) {
-                    process.stderr.write(data);
-                });
-            
-                proc.on('close', function(code: any, signal: any) {
-                    console.log('Test closed -> Code: ', code, '  Signal: ', signal);
-                });
-            }
+                if (fs.existsSync(scriptPath)) 
+                {
+                    fs.copyFileSync(scriptPath, path.join(executionPath, environment.platforms.scriptName));
+                    fs.chmodSync(path.join(executionPath, environment.platforms.scriptName), '777');
 
-            else throw new Error("NO_EXECUTION_SCRIPT_FOUND");
-        } catch(err) { throw err; }
+                    var proc = child_process.spawn('./' + environment.platforms.scriptName, {cwd: executionPath});
+                
+                    proc.stdout.on('data', function(data: any) {
+                        process.stdout.write(data);
+                    });
+                
+                    proc.stderr.on('data', function(data: any) {
+                        process.stderr.write(data);
+                    });
+
+                    proc.on('error', function(err: any) {
+                        console.log(err);
+                        reject(new Error("ERROR_EXECUTING_SCRIPT"));
+                    });
+                
+                    proc.on('close', function(code: any, signal: any) {
+                        console.log('Test closed -> Code: ', code, '  Signal: ', signal);
+                        resolve();
+                    });
+                }
+
+                else reject(new Error("NO_EXECUTION_SCRIPT_FOUND"));
+            } catch(err) { reject(err); }
+        });
     }
 
 
