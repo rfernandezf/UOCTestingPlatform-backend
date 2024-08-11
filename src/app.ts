@@ -5,15 +5,16 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import * as https from 'https';
 import * as fs from "fs";
-
-const CERT_PATH = "common/certs/server.crt";
-const KEY_PATH = "common/certs/server.key";
-
 dotenv.config({ path: path.join(__dirname, '../.env') });
+
 import { handleError } from './helpers/error';
 import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
+import { environment } from '@utils/environment';
 const app: express.Application = express();
+
+const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.CERT_NAME!);
+const KEY_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.PRIVATE_KEY_NAME!);
 
 app.use(httpLogger);
 app.use(express.json());

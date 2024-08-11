@@ -2,6 +2,8 @@ const fs = require('fs');
 import sqlite3 from 'sqlite3';
 import { GenericDBConnection } from '@interfaces/controllers/DB/genericDBConnection';
 import { parseSQLFile } from '@utils/dbUtils';
+import { environment } from '@utils/environment';
+import * as path from 'path';
 
 
 export class SQLiteConnection implements GenericDBConnection
@@ -14,13 +16,13 @@ export class SQLiteConnection implements GenericDBConnection
     async getConnection(testingDB?: boolean): Promise<sqlite3.Database> {
         if(testingDB) 
         {
-            this.testDB = await this.initConnection(this.testDB, "./common/database_test.sqlite");
+            this.testDB = await this.initConnection(this.testDB, path.join(process.env.COMMON_FOLDER!, environment.database.testName));
             return this.testDB;
         }
 
         else
         {
-            this.db = await this.initConnection(this.db, "./common/database.sqlite");
+            this.db = await this.initConnection(this.db, path.join(process.env.COMMON_FOLDER!, environment.database.name));
             return this.db;
         }
     }
@@ -44,7 +46,7 @@ export class SQLiteConnection implements GenericDBConnection
     {
         return new Promise((resolve, reject) => {
             // Read SQL script
-            const dataSql: string = fs.readFileSync('./common/generateDatabase.sql').toString();
+            const dataSql: string = fs.readFileSync(path.join(process.env.COMMON_FOLDER!, environment.database.generationScript)).toString();
 
             let sqlQueries = parseSQLFile(dataSql);
 

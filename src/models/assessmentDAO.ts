@@ -5,7 +5,6 @@ import dbConnection from "@utils/dbConnection";
 import { dateToEpoch, epochToDate } from "@utils/dbUtils";
 import { RunResult } from "sqlite3";
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from "fs";
 
 export class AssessmentDAO implements DAO<Assessment>
 {
@@ -26,11 +25,6 @@ export class AssessmentDAO implements DAO<Assessment>
                 }
 
                 if(err) reject(err);
-
-                // Create a folder with the UUID inside assessments folder
-                if (!fs.existsSync("./common/assessments/" + pathNameUUID)){
-                    fs.mkdirSync("./common/assessments/" + pathNameUUID, { recursive: true });
-                }
 
                 resolve(entity);
             });
@@ -53,17 +47,9 @@ export class AssessmentDAO implements DAO<Assessment>
         return new Promise(async (resolve, reject) => {
             try
             {            
-                let assessmentToDelete: Assessment = await this.get(id);
-                let folderToDelete = assessmentToDelete.testPath;
-
                 (await this.db).run("DELETE FROM Assessments WHERE id = ?", id, function (this: RunResult, err: Error | null) { 
                     if(err) reject(err);
                     if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
-
-                    // Delete created folder and contents
-                    if (fs.existsSync("./common/assessments/" + folderToDelete)){
-                        fs.rm("./common/assessments/" + folderToDelete, { recursive: true }, () => {});
-                    }
 
                     resolve();        
                 });
