@@ -12,8 +12,11 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     create(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("INSERT INTO ExecutionPlatforms (name) VALUES (?)", entity.name, function (this: RunResult, err: Error | null) { 
-                if(this.lastID) entity.id = this.lastID;
+            (await this.db).run("INSERT INTO ExecutionPlatforms (name, internal_name) VALUES (?, ?)", [entity.name, entity.internalName], function (this: RunResult, err: Error | null) { 
+                if(this.lastID) 
+                {
+                    entity.id = this.lastID;
+                }
 
                 if(err) reject(err);
 
@@ -24,7 +27,7 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
 
     update(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE ExecutionPlatforms SET name = ? WHERE id = ?", entity.name, entity.id, function (this: RunResult, err: Error | null) {                
+            (await this.db).run("UPDATE ExecutionPlatforms SET name = ?, internal_name = ? WHERE id = ?", [entity.name, entity.internalName, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
                 if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 

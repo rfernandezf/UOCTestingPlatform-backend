@@ -1,10 +1,13 @@
 import { ExecutionPlatform } from '@controllers/executionPlatform';
 import { ExecutionPlatformRequest, executionPlatformRequestSchema } from '@interfaces/controllers/executionPlatform';
 import { ExecutionPlatformDAO } from '@models/executionPlatformDAO';
+import { environment } from '@utils/environment';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
 const Ajv = require("ajv");
 const ajv = new Ajv();
+import * as fs from "fs";
+import * as path from 'path';
 
 export const getPlatforms = async (_req: express.Request, res: express.Response) => {
     try {
@@ -27,6 +30,12 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let executionPlatform = new ExecutionPlatform(0, body.name);
       let executionPlatforms = await new ExecutionPlatformDAO();
       executionPlatform = await executionPlatforms.create(executionPlatform);
+
+      // Create a folder for the new platform
+      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName))) {
+          fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName), { recursive: true });
+      }
+          
       res.send(executionPlatform);
     }
     catch(err: any) {
@@ -46,7 +55,19 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
 
       let executionPlatform = new ExecutionPlatform(id, body.name);
       let executionPlatforms = await new ExecutionPlatformDAO();
+      let oldExecutionPlatform = await executionPlatforms.get(id);
       executionPlatform = await executionPlatforms.update(executionPlatform);
+
+      // Edit folder name if exists, or create a new one if folder doesn't exists
+      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, oldExecutionPlatform.internalName))) {
+        fs.renameSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, oldExecutionPlatform.internalName), 
+          path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName));
+      }
+
+      else {
+        fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName), { recursive: true });
+      }
+
       res.send(executionPlatform);
     }
     catch(err: any) {
@@ -60,6 +81,13 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let id: number = +_req.params.id;
 
       let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatform = await executionPlatforms.get(id);
+      
+      // Delete created folder and contents
+      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName))) {
+        fs.rm(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName), { recursive: true }, () => {});
+      }
+
       await executionPlatforms.delete(id);
 
       res.send();

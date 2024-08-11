@@ -1,6 +1,7 @@
 export interface ExecutionPlatformResponse {
     id: number,
-    name: string
+    name: string,
+    internal_name: string
 }
 
 export interface ExecutionPlatformRequest

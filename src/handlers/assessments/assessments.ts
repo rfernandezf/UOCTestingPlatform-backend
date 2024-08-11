@@ -34,7 +34,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       assessment = await assessments.create(assessment);
 
       // Create a folder with the UUID inside assessments folder
-      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))){
+      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
           fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
       }
 
@@ -74,7 +74,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       let assessment = await assessments.get(id);
       
       // Delete created folder and contents
-      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))){
+      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
           fs.rm(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true }, () => {});
       }
       
@@ -111,7 +111,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       let assessment = await assessments.get(id);
 
       // Create a folder with the UUID inside assessments folder
-      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))){
+      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
         fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
       }
       
@@ -182,7 +182,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
       let assessment = await assessments.get(id);
 
       // Delete created folder and contents
-      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))){
+      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
         fs.rm(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) , { recursive: true }, () => {});
       }
 

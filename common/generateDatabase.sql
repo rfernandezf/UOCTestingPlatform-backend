@@ -9,7 +9,8 @@
 /* ----- CREATE NEW TABLES ----- */
 CREATE TABLE ExecutionPlatforms (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	name TEXT UNIQUE NOT NULL
+	name TEXT UNIQUE NOT NULL,
+	internal_name TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE Assessments (
