@@ -41,22 +41,4 @@ export class ExecutionPlatform
     {
       return this._name.toLowerCase().replaceAll(' ', '_').replace(/[^a-zA-Z0-9_]+/g, '');
     }
-    
-    public run()
-    {
-        var spawn = require('child_process').spawn;
-        var proc = spawn('common/platforms/' + this._name + '/run.sh');
-    
-        proc.stdout.on('data', function(data: any) {
-          process.stdout.write(data);
-        });
-    
-        proc.stderr.on('data', function(data: any) {
-          process.stderr.write(data);
-        });
-    
-        proc.on('close', function(code: any, signal: any) {
-          console.log('Test closed -> Code: ', code, '  Signal: ', signal);
-        });
-    }
 }

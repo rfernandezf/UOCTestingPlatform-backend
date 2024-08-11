@@ -10,6 +10,7 @@ const Ajv = require("ajv");
 const ajv = new Ajv();
 import * as fs from "fs";
 import * as path from 'path';
+import { TestExecution } from '@handlers/core/testExecution';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -123,45 +124,6 @@ export const uploadAssessmentFiles = async (_req: express.Request, res: express.
       assessment.fileName = _req.file.originalname;
       assessments.update(assessment);
 
-      // import * as fs from "fs";
-      // import yauzl from 'yauzl';
-      // // Uncompress the file and delete the zip
-      // yauzl.open(filePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
-      //   if (err) throw err;
-      //   zipfile.readEntry();
-      //   zipfile.on("entry", function(entry: any) {
-      //     if (/\/$/.test(entry.fileName)) {
-      //       // Directory file names end with '/'.
-      //       // Note that entries for directories themselves are optional.
-      //       // An entry's fileName implicitly requires its parent directories to exist.
-      //       if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) + "/" + entry.fileName)){
-      //         fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) + "/" + entry.fileName, { recursive: true });
-      //       }
-      //       zipfile.readEntry();
-      //     } 
-      //     else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
-      //     else {
-      //       // file entry
-      //       zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
-      //         if (err) throw err;                
-              
-      //         var fileStream = fs.createWriteStream(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) + "/" + entry.fileName);
-      //         readStream.pipe(fileStream);
-
-      //         readStream.on("end", function() {
-      //           zipfile.readEntry();
-      //         });
-
-      //       });
-      //     }
-      //   });
-      // });
-
-      // // Delete the zip file
-      // if (fs.existsSync(filePath)){
-      //   fs.unlinkSync(filePath);
-      // }
-
       res.send();
     }
 
@@ -211,12 +173,31 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
  * - Send results back to the frontend (API REST for getting the results or WSS/SSE for getting them on real time, let's see...)
  */
 export const runAssessment = async (_req: express.Request, res: express.Response) => {
-  res.send();
-}
-// export const runAssessment = async (_req: express.Request, res: express.Response) => {
-//   res.send('Running tests...');
-  
-//   let executionPlatform: ExecutionPlatform = new ExecutionPlatform(0, "java");
+  try {
+    let id: number = +_req.params.id;
 
-//   executionPlatform.run();
-// }
+    let assessments = await new AssessmentDAO();
+    let assessment = await assessments.get(id);
+
+    // Create a folder with the UUID inside assessments folder
+    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath, assessment.fileName))) {
+      throw new Error("NO_UNITARY_TESTS_FOUND");
+    }
+    
+    if(_req.file)
+    {
+      // Create new execution
+      let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer);
+      await testExecution.run();
+
+      res.send();
+    }
+
+    else throw new Error("INPUT_VALIDATION_ERROR");
+  }
+
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}

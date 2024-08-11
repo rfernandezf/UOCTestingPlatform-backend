@@ -3,7 +3,8 @@ export const environment =
     folders: {
         assessments: "/assessments",
         certs: "/certs",
-        platforms: "/platforms"
+        platforms: "/platforms",
+        executions: "/executions"
     },
     database: {
         name: "database.sqlite",

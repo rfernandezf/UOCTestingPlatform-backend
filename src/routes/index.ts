@@ -1,6 +1,5 @@
 import express from 'express';
 import { healthCheck } from '../handlers/healthcheck';
-import { runTest } from '../handlers/core/run';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platforms/platforms';
 import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/users/users';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classrooms/classrooms';
@@ -11,7 +10,6 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', healthCheck);
-router.get('/run', runTest);
 
 router.get('/platforms', getPlatforms);
 router.post('/platforms', postPlatform);
@@ -43,6 +41,6 @@ router.put('/assessments/:id', putAssessment);
 router.delete('/assessments/:id', deleteAssessment);
 router.post('/assessments/:id/files', multer().single('file'), uploadAssessmentFiles);
 router.delete('/assessments/:id/files', deleteAssessmentFiles);
-router.post('/assessments/:id/run', runAssessment); // UPLOAD A NEW ASSESSMENT BY THE STUDENT TO BE RAN
+router.post('/assessments/:id/run', multer().single('file'), runAssessment);
 
 export default router;
