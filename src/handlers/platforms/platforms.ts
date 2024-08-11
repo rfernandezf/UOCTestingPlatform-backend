@@ -113,3 +113,53 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     }
   }
 
+  export const getPlatformScript = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id: number = +_req.params.id;
+
+      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatform = await executionPlatforms.get(id);
+
+      // Check for script existence
+      if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName, environment.platforms.scriptName))) {
+        // Read script file content
+        let filePath = path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName, environment.platforms.scriptName);
+        let fileContent = fs.readFileSync(filePath);
+        res.send(fileContent.toString());
+      }
+
+      else res.send("");
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
+  export const putPlatformScript = async (_req: express.Request, res: express.Response) => {
+    try {
+      let body: ExecutionPlatformRequest = _req.body;
+      let id: number = +_req.params.id;
+
+      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatform : ExecutionPlatform = await executionPlatforms.get(id);
+
+      // Create a folder for the new platform if it doesn't exists
+      if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName))) {
+        fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName), { recursive: true });
+      }
+
+      console.log(body)
+
+      // Write body into the file
+      let filePath = path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName, environment.platforms.scriptName);
+      fs.writeFileSync(filePath, _req.body);
+
+      res.send()
+    }
+  
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }

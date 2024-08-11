@@ -17,6 +17,7 @@ const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.cert
 const KEY_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.PRIVATE_KEY_NAME!);
 
 app.use(httpLogger);
+app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

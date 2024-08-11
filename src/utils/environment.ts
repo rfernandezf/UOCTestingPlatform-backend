@@ -9,5 +9,8 @@ export const environment =
         name: "database.sqlite",
         testName: "database_test.sqlite",
         generationScript: "generateDatabase.sql"
+    },
+    platforms: {
+        scriptName: "run.sh"
     }
 }
