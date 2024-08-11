@@ -138,7 +138,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
 
   export const putPlatformScript = async (_req: express.Request, res: express.Response) => {
     try {
-      let body: ExecutionPlatformRequest = _req.body;
+      let body: string = _req.body;
       let id: number = +_req.params.id;
 
       let executionPlatforms = await new ExecutionPlatformDAO();
@@ -149,11 +149,9 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
         fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName), { recursive: true });
       }
 
-      console.log(body)
-
       // Write body into the file
       let filePath = path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, executionPlatform.internalName, environment.platforms.scriptName);
-      fs.writeFileSync(filePath, _req.body);
+      fs.writeFileSync(filePath, body);
 
       res.send()
     }
