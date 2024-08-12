@@ -1,8 +1,8 @@
 import { ClassroomsUsersDAO } from "./classroomsUsersDAO";
 import { ClassroomDAO } from "./classroomDAO";
 import { UserDAO } from "./userDAO";
-import { User } from "@controllers/user";
-import { Classroom } from "@controllers/classroom";
+import { User } from "@controllers/userController";
+import { Classroom } from "@controllers/classroomControlller";
 
 var assert = require('assert');
 function iThrowError(err: string) {

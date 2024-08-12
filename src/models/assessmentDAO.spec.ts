@@ -1,4 +1,4 @@
-import { Assessment } from "@controllers/assessment";
+import { Assessment } from "@controllers/assessmentController";
 import { AssessmentDAO } from "./assessmentDAO";
 
 

@@ -1,5 +1,5 @@
-import { Classroom } from '@controllers/classroom';
-import { ClassroomRequest, classroomRequestSchema } from '@interfaces/controllers/classroom';
+import { Classroom } from '@controllers/classroomControlller';
+import { ClassroomRequest, classroomRequestSchema } from '@interfaces/classroom';
 import { ClassroomDAO } from '@models/classroomDAO';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';

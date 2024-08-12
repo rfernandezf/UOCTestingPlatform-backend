@@ -1,6 +1,6 @@
-import { Assessment } from "@controllers/assessment";
-import { AssessmentResponse } from "@interfaces/controllers/assessment";
-import { DAO } from "@interfaces/controllers/DAO";
+import { Assessment } from "@controllers/assessmentController";
+import { AssessmentResponse } from "@interfaces/assessment";
+import { DAO } from "@interfaces/DAO";
 import dbConnection from "@utils/dbConnection";
 import { dateToEpoch, epochToDate } from "@utils/dbUtils";
 import { RunResult } from "sqlite3";

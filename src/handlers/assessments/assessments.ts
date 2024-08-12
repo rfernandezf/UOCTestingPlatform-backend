@@ -1,6 +1,6 @@
 
-import { Assessment } from '@controllers/assessment';
-import { AssessmentRequest, assessmentRequestSchema } from '@interfaces/controllers/assessment';
+import { Assessment } from '@controllers/assessmentController';
+import { AssessmentRequest, assessmentRequestSchema } from '@interfaces/assessment';
 import { AssessmentDAO } from '@models/assessmentDAO';
 import { environment } from '@utils/environment';
 import { epochToDate } from '@utils/dbUtils';

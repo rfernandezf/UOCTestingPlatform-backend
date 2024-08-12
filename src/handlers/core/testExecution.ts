@@ -1,5 +1,5 @@
-import { Assessment } from "@controllers/assessment";
-import { ExecutionPlatform } from "@controllers/executionPlatform";
+import { Assessment } from "@controllers/assessmentController";
+import { ExecutionPlatform } from "@controllers/executionPlatformController";
 import { ExecutionPlatformDAO } from "@models/executionPlatformDAO";
 import { environment } from "@utils/environment";
 import * as fs from "fs";
@@ -7,7 +7,7 @@ import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import yauzl from 'yauzl';
 import * as child_process from 'child_process'; 
-import { ExecutionScriptResponse } from "@interfaces/controllers/executionPlatform";
+import { ExecutionScriptResponse } from "@interfaces/executionPlatform";
 import { SSEConnectionHandler } from "src/sse/sseConnection";
 
 export class TestExecution

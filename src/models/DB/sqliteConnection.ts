@@ -1,6 +1,6 @@
 const fs = require('fs');
 import sqlite3 from 'sqlite3';
-import { GenericDBConnection } from '@interfaces/controllers/DB/genericDBConnection';
+import { GenericDBConnection } from '@interfaces/DB/genericDBConnection';
 import { parseSQLFile } from '@utils/dbUtils';
 import { environment } from '@utils/environment';
 import * as path from 'path';

@@ -1,5 +1,5 @@
-import { ExecutionPlatform } from '@controllers/executionPlatform';
-import { ExecutionPlatformRequest, executionPlatformRequestSchema } from '@interfaces/controllers/executionPlatform';
+import { ExecutionPlatform } from '@controllers/executionPlatformController';
+import { ExecutionPlatformRequest, executionPlatformRequestSchema } from '@interfaces/executionPlatform';
 import { ExecutionPlatformDAO } from '@models/executionPlatformDAO';
 import { environment } from '@utils/environment';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';

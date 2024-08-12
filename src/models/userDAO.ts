@@ -1,6 +1,6 @@
-import { User } from "@controllers/user";
-import { DAO } from "@interfaces/controllers/DAO";
-import { UserResponse, UserRole } from "@interfaces/controllers/user";
+import { User } from "@controllers/userController";
+import { DAO } from "@interfaces/DAO";
+import { UserResponse, UserRole } from "@interfaces/user";
 import dbConnection from "@utils/dbConnection";
 import { RunResult } from "sqlite3";
 

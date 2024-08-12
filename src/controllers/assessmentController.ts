@@ -1,4 +1,4 @@
-import { ExecutionPlatform } from "@controllers/executionPlatform";
+import { ExecutionPlatform } from "@controllers/executionPlatformController";
 
 export class Assessment
 {

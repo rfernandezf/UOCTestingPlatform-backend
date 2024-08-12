@@ -1,6 +1,6 @@
-import { Classroom } from '@controllers/classroom';
-import { User } from '@controllers/user';
-import { UserRequest, userRequestSchema } from '@interfaces/controllers/user';
+import { Classroom } from '@controllers/classroomControlller';
+import { User } from '@controllers/userController';
+import { UserRequest, userRequestSchema } from '@interfaces/user';
 import { ClassroomsUsersDAO } from '@models/classroomsUsersDAO';
 import { UserDAO } from '@models/userDAO';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
