@@ -9,12 +9,13 @@
     "build": "tsc -p .",
     "prettier": "prettier --write src/**/*.ts",
     "lint": "npm run prettier && eslint src/**/*.ts",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register test/**/*.ts"
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register test/main.test.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/multer": "^1.4.11",
+    "@types/supertest": "^6.0.2",
     "@types/yauzl": "^2.10.3",
     "ajv": "^8.17.1",
     "better-sse": "^0.12.1",
@@ -26,6 +27,7 @@
     "multer": "^1.4.5-lts.1",
     "sqlite": "^5.1.1",
     "sqlite3": "5.1.6",
+    "supertest": "^7.0.0",
     "tsconfig-paths": "^4.2.0",
     "uuid": "^10.0.0",
     "winston": "^3.9.0",

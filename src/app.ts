@@ -12,7 +12,7 @@ import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
 import { environment } from '@utils/environment';
 import { SSEConnectionHandler } from './sse/sseConnection';
-const app: express.Application = express();
+export const app: express.Application = express();
 
 const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.CERT_NAME!);
 const KEY_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.PRIVATE_KEY_NAME!);
@@ -49,7 +49,7 @@ const httpsOptions = {
   cert: fs.readFileSync(CERT_PATH),
 };
 
-const server = https.createServer(httpsOptions, app);
+export const server = https.createServer(httpsOptions, app);
 
 function onError(error: { syscall: string; code: string }) {
   if (error.syscall !== 'listen') {

@@ -1,5 +1,4 @@
 var assert = require('assert');
-//import {SQLiteConnection} from '../src/models/DB/sqliteConnection'
 var dbUtils = require('@utils/dbUtils');
 
 let sqlScript1 = '/* ----- DROP OLD TABLES IF EXISTS ----- */\n'
