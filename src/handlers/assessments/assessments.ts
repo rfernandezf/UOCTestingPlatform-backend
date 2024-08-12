@@ -11,7 +11,6 @@ const ajv = new Ajv();
 import * as fs from "fs";
 import * as path from 'path';
 import { TestExecution } from '@handlers/core/testExecution';
-import { ExecutionScriptResponse } from '@interfaces/controllers/executionPlatform';
 import { SSEConnectionHandler } from 'src/sse/sseConnection';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
