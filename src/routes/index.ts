@@ -41,6 +41,6 @@ router.put('/assessments/:id', putAssessment);
 router.delete('/assessments/:id', deleteAssessment);
 router.post('/assessments/:id/files', multer().single('file'), uploadAssessmentFiles);
 router.delete('/assessments/:id/files', deleteAssessmentFiles);
-router.post('/assessments/:id/run', multer().single('file'), runAssessment);
+router.post('/assessments/:id/run/:sseClientId', multer().single('file'), runAssessment);
 
 export default router;

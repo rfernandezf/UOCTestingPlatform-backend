@@ -11,6 +11,7 @@ import { handleError } from './helpers/error';
 import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
 import { environment } from '@utils/environment';
+import { SSEConnectionHandler } from './sse/sseConnection';
 const app: express.Application = express();
 
 const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.CERT_NAME!);
@@ -23,6 +24,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/api/v1/', router);
+
+
+app.get('/api/v1/sse', SSEConnectionHandler.getInstance().createConnection());
 
 // Catch 404 and forward to error handler
 app.use((_err: Error, _req: express.Request, _res: express.Response, next: NextFunction) => {

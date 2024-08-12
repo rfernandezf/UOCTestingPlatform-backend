@@ -8,21 +8,24 @@ import { v4 as uuidv4 } from 'uuid';
 import yauzl from 'yauzl';
 import * as child_process from 'child_process'; 
 import { ExecutionScriptResponse } from "@interfaces/controllers/executionPlatform";
+import { SSEConnectionHandler } from "src/sse/sseConnection";
 
 export class TestExecution
 {
     private _assessment: Assessment;
     private _file: Buffer;
     private _uuid: string;
+    private _sseClientId: string;
 
-    constructor(assessment: Assessment, file: Buffer)
+    constructor(assessment: Assessment, file: Buffer, sseClientId: string)
     {
         this._assessment = assessment;
         this._file = file;
         this._uuid = uuidv4();
+        this._sseClientId = sseClientId;
     }
 
-    public async run(): Promise<Array<ExecutionScriptResponse>>
+    public async run()
     {
         try
         {
@@ -50,8 +53,8 @@ export class TestExecution
             let executionPlatforms: ExecutionPlatformDAO = new ExecutionPlatformDAO();
             let executionPlatform: ExecutionPlatform = await executionPlatforms.get(this._assessment.executionPlatformID);
 
-            return await this.launchScript(executionPlatform.internalName, executionPath);
-
+            // Async call. We'll return the result & errors (if any) to the client using SSE
+            this.launchScript(executionPlatform.internalName, executionPath);
         } catch(err) { throw err; }
     }
 
@@ -116,7 +119,7 @@ export class TestExecution
                     let receivedDataBuffer: string = '';
                     let result: Array<ExecutionScriptResponse> = [];
                 
-                    proc.stdout.on('data', function(data: Buffer) {
+                    proc.stdout.on('data', (data: Buffer) => {
                         receivedDataBuffer += data.toString();
 
                         let splittedBuffer = receivedDataBuffer.split('}');
@@ -125,7 +128,11 @@ export class TestExecution
                             // If we cannot JSON parse it probably is an incompleted message and must be stored for concatenate it with the next buffer sending
                             try
                             {
-                                result.push(JSON.parse(testResult + '}'));
+                                let partialResult = JSON.parse(testResult + '}');
+                                result.push(partialResult);
+                                
+                                // Start sending events
+                                SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, partialResult);
                             } catch(err) { 
                                 receivedDataBuffer = testResult; 
                             }
@@ -137,19 +144,26 @@ export class TestExecution
                         process.stderr.write(data);
                     });
 
-                    proc.on('error', function(err: any) {
+                    proc.on('error', (err: any) => {
                         console.log(err);
+                        SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {error: 'ERROR_EXECUTING_SCRIPT'});
+                        SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
                         reject(new Error("ERROR_EXECUTING_SCRIPT"));
                     });
                 
-                    proc.on('close', function(code: any, signal: any) {
+                    proc.on('close', (code: any, signal: any) => {
                         // console.log('Test closed -> Code: ', code, '  Signal: ', signal);
                         try
                         {
                           resolve(result);
                         } catch(err) { 
+                            SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {error: 'ERROR_EXECUTING_SCRIPT'});
+                            SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
                             reject(new Error("ERROR_EXECUTING_SCRIPT")); 
                         } finally {
+                            // Close SSE session
+                            SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
+
                             // Delete the files after ending with the execution
                             if (fs.existsSync(executionPath)) {
                                 fs.rm(executionPath, { recursive: true }, () => {});
@@ -158,7 +172,12 @@ export class TestExecution
                     });
                 }
 
-                else reject(new Error("NO_EXECUTION_SCRIPT_FOUND"));
+                else 
+                {
+                    SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {error: 'NO_EXECUTION_SCRIPT_FOUND'});
+                    SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
+                    reject(new Error("NO_EXECUTION_SCRIPT_FOUND"));
+                }
             } catch(err) { reject(err); }
         });
     }

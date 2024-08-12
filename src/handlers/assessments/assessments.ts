@@ -12,6 +12,7 @@ import * as fs from "fs";
 import * as path from 'path';
 import { TestExecution } from '@handlers/core/testExecution';
 import { ExecutionScriptResponse } from '@interfaces/controllers/executionPlatform';
+import { SSEConnectionHandler } from 'src/sse/sseConnection';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -176,6 +177,7 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
 export const runAssessment = async (_req: express.Request, res: express.Response) => {
   try {
     let id: number = +_req.params.id;
+    let sseClientId: string = _req.params.sseClientId;
 
     let assessments = await new AssessmentDAO();
     let assessment = await assessments.get(id);
@@ -184,14 +186,17 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath, assessment.fileName))) {
       throw new Error("NO_UNITARY_TESTS_FOUND");
     }
+
+    // Check if SSE connection is active
+    if(!SSEConnectionHandler.getInstance().checkConnection(sseClientId)) throw new Error("NO_SSE_CONNECTION");
     
     if(_req.file)
     {
       // Create new execution
-      let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer);
-      let response: Array<ExecutionScriptResponse> = await testExecution.run();
+      let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer, sseClientId);
 
-      res.send(response);
+      await testExecution.run();
+      res.status(202).send();
     }
 
     else throw new Error("INPUT_VALIDATION_ERROR");
