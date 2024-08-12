@@ -10,7 +10,7 @@ const Ajv = require("ajv");
 const ajv = new Ajv();
 import * as fs from "fs";
 import * as path from 'path';
-import { TestExecution } from '@handlers/core/testExecution';
+import { TestExecution } from '@handlers/testExecutionHandler';
 import { SSEConnectionHandler } from 'src/sse/sseConnection';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {

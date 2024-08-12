@@ -1,9 +1,9 @@
 import express from 'express';
-import { healthCheck } from '../handlers/healthcheck';
-import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platforms/platforms';
-import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/users/users';
-import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classrooms/classrooms';
-import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessments/assessments';
+import { healthCheck } from '../handlers/healthcheckHandler';
+import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
+import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/usersHandler';
+import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
+import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessmentsHandler';
 const multer = require('multer');
 
 const router = express.Router();
