@@ -22,7 +22,7 @@ export class TestExecution
         this._uuid = uuidv4();
     }
 
-    public async run(): Promise<ExecutionScriptResponse>
+    public async run(): Promise<Array<ExecutionScriptResponse>>
     {
         try
         {
@@ -99,7 +99,7 @@ export class TestExecution
         });
     }
 
-    private launchScript(internalName: string, executionPath: string): Promise<ExecutionScriptResponse>
+    private launchScript(internalName: string, executionPath: string): Promise<Array<ExecutionScriptResponse>>
     {
         return new Promise(async (resolve, reject) => {
             try
@@ -113,11 +113,24 @@ export class TestExecution
 
                     var proc = child_process.spawn('./' + environment.platforms.scriptName, {cwd: executionPath});
 
-                    let receivedData: string = '';
+                    let receivedDataBuffer: string = '';
+                    let result: Array<ExecutionScriptResponse> = [];
                 
                     proc.stdout.on('data', function(data: Buffer) {
-                        //process.stdout.write(data);
-                        receivedData += data.toString();
+                        receivedDataBuffer += data.toString();
+
+                        let splittedBuffer = receivedDataBuffer.split('}');
+
+                        splittedBuffer.forEach((testResult) => {
+                            // If we cannot JSON parse it probably is an incompleted message and must be stored for concatenate it with the next buffer sending
+                            try
+                            {
+                                result.push(JSON.parse(testResult + '}'));
+                            } catch(err) { 
+                                receivedDataBuffer = testResult; 
+                            }
+                            
+                        });
                     });
                 
                     proc.stderr.on('data', function(data: any) {
@@ -130,12 +143,18 @@ export class TestExecution
                     });
                 
                     proc.on('close', function(code: any, signal: any) {
-                        console.log('Test closed -> Code: ', code, '  Signal: ', signal);
+                        // console.log('Test closed -> Code: ', code, '  Signal: ', signal);
                         try
                         {
-                          let result: ExecutionScriptResponse = JSON.parse(receivedData);
                           resolve(result);
-                        } catch(err) { reject(new Error("ERROR_EXECUTING_SCRIPT")); }
+                        } catch(err) { 
+                            reject(new Error("ERROR_EXECUTING_SCRIPT")); 
+                        } finally {
+                            // Delete the files after ending with the execution
+                            if (fs.existsSync(executionPath)) {
+                                fs.rm(executionPath, { recursive: true }, () => {});
+                            }
+                        }
                     });
                 }
 

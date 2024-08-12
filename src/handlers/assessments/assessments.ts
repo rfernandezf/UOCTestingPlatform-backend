@@ -189,7 +189,7 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     {
       // Create new execution
       let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer);
-      let response: ExecutionScriptResponse = await testExecution.run();
+      let response: Array<ExecutionScriptResponse> = await testExecution.run();
 
       res.send(response);
     }
