@@ -4,6 +4,14 @@ export interface ExecutionPlatformResponse {
     internal_name: string
 }
 
+export interface ExecutionScriptResponse {
+  name?: string;
+  method?: string;
+  status: string;
+  time?: number;
+  description?: string;
+}
+
 export interface ExecutionPlatformRequest
 {
   name: string;

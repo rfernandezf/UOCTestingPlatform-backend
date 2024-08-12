@@ -11,6 +11,7 @@ const ajv = new Ajv();
 import * as fs from "fs";
 import * as path from 'path';
 import { TestExecution } from '@handlers/core/testExecution';
+import { ExecutionScriptResponse } from '@interfaces/controllers/executionPlatform';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -188,9 +189,9 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     {
       // Create new execution
       let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer);
-      await testExecution.run();
+      let response: ExecutionScriptResponse = await testExecution.run();
 
-      res.send();
+      res.send(response);
     }
 
     else throw new Error("INPUT_VALIDATION_ERROR");

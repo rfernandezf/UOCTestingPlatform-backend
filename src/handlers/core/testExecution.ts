@@ -7,6 +7,7 @@ import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import yauzl from 'yauzl';
 import * as child_process from 'child_process'; 
+import { ExecutionScriptResponse } from "@interfaces/controllers/executionPlatform";
 
 export class TestExecution
 {
@@ -21,7 +22,7 @@ export class TestExecution
         this._uuid = uuidv4();
     }
 
-    public async run()
+    public async run(): Promise<ExecutionScriptResponse>
     {
         try
         {
@@ -49,7 +50,7 @@ export class TestExecution
             let executionPlatforms: ExecutionPlatformDAO = new ExecutionPlatformDAO();
             let executionPlatform: ExecutionPlatform = await executionPlatforms.get(this._assessment.executionPlatformID);
 
-            await this.launchScript(executionPlatform.internalName, executionPath);
+            return await this.launchScript(executionPlatform.internalName, executionPath);
 
         } catch(err) { throw err; }
     }
@@ -98,7 +99,7 @@ export class TestExecution
         });
     }
 
-    private launchScript(internalName: string, executionPath: string): Promise<void>
+    private launchScript(internalName: string, executionPath: string): Promise<ExecutionScriptResponse>
     {
         return new Promise(async (resolve, reject) => {
             try
@@ -111,9 +112,12 @@ export class TestExecution
                     fs.chmodSync(path.join(executionPath, environment.platforms.scriptName), '777');
 
                     var proc = child_process.spawn('./' + environment.platforms.scriptName, {cwd: executionPath});
+
+                    let receivedData: string = '';
                 
-                    proc.stdout.on('data', function(data: any) {
-                        process.stdout.write(data);
+                    proc.stdout.on('data', function(data: Buffer) {
+                        //process.stdout.write(data);
+                        receivedData += data.toString();
                     });
                 
                     proc.stderr.on('data', function(data: any) {
@@ -127,7 +131,11 @@ export class TestExecution
                 
                     proc.on('close', function(code: any, signal: any) {
                         console.log('Test closed -> Code: ', code, '  Signal: ', signal);
-                        resolve();
+                        try
+                        {
+                          let result: ExecutionScriptResponse = JSON.parse(receivedData);
+                          resolve(result);
+                        } catch(err) { reject(new Error("ERROR_EXECUTING_SCRIPT")); }
                     });
                 }
 
