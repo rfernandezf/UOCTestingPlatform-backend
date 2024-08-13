@@ -16,13 +16,12 @@ export interface AssessmentRequest {
     publish_date: number,
     expiration_date: number,
     platform_id: number,
-    classroom_id: number,
-    test_path: string  
+    classroom_id: number
 }
 
 export const assessmentRequestSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "required": ["classroom_id","description","expiration_date","name","platform_id","publish_date","test_path"],
+    "required": ["classroom_id","description","expiration_date","name","platform_id","publish_date"],
     "properties": {
         "classroom_id": {
             "type": "number"
@@ -41,9 +40,6 @@ export const assessmentRequestSchema = {
         },
         "publish_date": {
             "type": "number"
-        },
-        "test_path": {
-            "type": "string"
         }
     },
     "type": "object"

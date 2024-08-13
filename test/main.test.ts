@@ -17,6 +17,7 @@ import "@models/classroomsUsersDAO.spec"
 import "@handlers/platformsHandler.spec"
 import "@handlers/classroomsHandler.spec"
 import "@handlers/usersHandler.spec"
+import "@handlers/assessmentsHandler.spec"
 
 // Other utils testing
 import "./utils.test"
