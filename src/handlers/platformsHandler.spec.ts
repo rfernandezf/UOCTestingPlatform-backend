@@ -7,11 +7,10 @@ import { ExecutionPlatformRequest } from '@interfaces/executionPlatform';
 import { environment } from '@utils/environment';
 
 var assert = require('assert');
-function iThrowError(err: string) {
-    console.log(err)
-}
 
 describe('API REST - /api/v1/platforms', function () {
+
+    let javaPlatformScript: string = `#!/bin/bash\n\ngradle clean test | awk '/[a-zA-Z0-9]* > [a-zA-Z0-9]*.* ((PASSED)|(FAILED))/ { printf "{\"name\": \"%s\", \"method\": \"%s\", \"status\": \"%s\"}" , $1, $3, $NF; fflush() }'`;
 
     afterEach(() => { server.close(); })
       
@@ -106,14 +105,65 @@ describe('API REST - /api/v1/platforms', function () {
     });
 
     describe('DELETE /platforms/:id', function () {
-        // TODO
+        it('Should return an 404 not found', async function () {
+            const response = await request(app).delete('/api/v1/platforms/40');
+
+            assert.equal(response.status, 404);
+        });
+
+        it('Should return a foreign key violation error - 422', async function () {
+            const response = await request(app).delete('/api/v1/platforms/3');
+
+            assert.equal(response.status, 422);
+        });
+
+        it('Should delete the platform', async function () {
+            const deleteResponse = await request(app).delete('/api/v1/platforms/2');
+            assert.equal(deleteResponse.status, 200);
+
+            const getResponse = await request(app).get('/api/v1/platforms/2');
+            assert.equal(getResponse.status, 404);
+        });
     });
 
-    describe('GET /platforms/:id/script', function () {
-        // TODO
-    });
+    describe('PUT /platforms/:id/script', () => {
 
-    describe('PUT /platforms/:id/script', function () {
-        // TODO
+        it('Should return an 404 not found', async () => {
+            const response = await request(app).put('/api/v1/platforms/40/script').send(javaPlatformScript);
+
+            assert.equal(response.status, 404);
+        });
+
+        it('Should create the script file', async () => {
+            let mockPlatform = new ExecutionPlatform(4,  "Java platform");
+
+            const response = await request(app).put('/api/v1/platforms/4/script').set("Content-type", "text/plain").send(javaPlatformScript);
+
+            assert.equal(response.status, 200);
+
+            // Check file and file content
+            if(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName, environment.platforms.scriptName)))
+            {
+                let readBuffer = fs.readFileSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName, environment.platforms.scriptName));
+                assert.equal(javaPlatformScript, readBuffer.toString());
+            }
+
+            else assert(false);
+        });
+    });    
+    
+    describe('GET /platforms/:id/script', async function () {
+        it('Should return an 404 not found', async () => {
+            const response = await request(app).get('/api/v1/platforms/40/script');
+
+            assert.equal(response.status, 404);
+        });
+
+        it('Should return the script file', async () => {
+            const response = await request(app).get('/api/v1/platforms/4/script');
+
+            assert.equal(response.status, 200);
+            assert.equal(javaPlatformScript, response.text);
+        });
     });
 });
