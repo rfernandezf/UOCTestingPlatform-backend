@@ -15,6 +15,8 @@ import "@models/classroomsUsersDAO.spec"
 
 // API REST testing
 import "@handlers/platformsHandler.spec"
+import "@handlers/classroomsHandler.spec"
+import "@handlers/usersHandler.spec"
 
 // Other utils testing
 import "./utils.test"
