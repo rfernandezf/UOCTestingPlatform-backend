@@ -181,21 +181,25 @@ describe('API REST - /api/v1/assessments', () => {
         });
 
         it('Should delete the assessment', async () => {
-            const deleteResponse = await request(app).delete('/api/v1/assessments/4');
+            const deleteResponse = await request(app).delete('/api/v1/assessments/3');
             assert.equal(deleteResponse.status, 200);
 
-            const getResponse = await request(app).get('/api/v1/assessments/4');
+            const getResponse = await request(app).get('/api/v1/assessments/3');
             assert.equal(getResponse.status, 404);
         });
     });
 
     describe('POST /assessments/:id/files', () => {
         it('Should return an 404 not found', async () => {
-            // TO DO
+            const response = await request(app).post('/api/v1/assessments/40/files');
+
+            assert.equal(response.status, 404);
         });
 
         it('Should return an 400 when no files attached', async () => {
-            // TO DO
+            const response = await request(app).post('/api/v1/assessments/4/files');
+
+            assert.equal(response.status, 400);
         });
 
         it('Should upload the test files', async () => {
@@ -209,25 +213,31 @@ describe('API REST - /api/v1/assessments', () => {
         });
 
         it('Should return an 404 not found', async () => {
-            // TO DO
+            const response = await request(app).delete('/api/v1/assessments/40/files');
+
+            assert.equal(response.status, 404);
         });
     });
 
     describe('POST assessments/:id/run/:sseClientId', () => {
+        let sseConnectionID = "";
+        
         it('Should return an 404 assessment not found', async () => {
-            // TO DO
+            const response = await request(app).post('/api/v1/assessments/40/run/my-sse-id-here');
+
+            assert.equal(response.status, 404);
         });
 
         it('Should return an 412 no unitary tests found', async () => {
-            // TO DO
+            const response = await request(app).post('/api/v1/assessments/2/run/my-sse-id-here');
+
+            assert.equal(response.status, 412);
         });
 
         it('Should return an 400 no SSE connection with the client', async () => {
-            // TO DO
-        });
+            const response = await request(app).post('/api/v1/assessments/4/run/my-sse-id-here');
 
-        it('Should return an 412 no unitary tests found', async () => {
-            // TO DO
+            assert.equal(response.status, 400);
         });
 
         it('Should return an 400 when no files attached', async () => {
