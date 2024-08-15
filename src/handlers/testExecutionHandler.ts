@@ -9,6 +9,7 @@ import yauzl from 'yauzl';
 import * as child_process from 'child_process'; 
 import { ExecutionScriptResponse } from "@interfaces/executionPlatform";
 import { SSEConnectionHandler } from "src/sse/sseConnection";
+import Logger from "@utils/logger";
 
 export class TestExecution
 {
@@ -140,19 +141,19 @@ export class TestExecution
                         });
                     });
                 
-                    // proc.stderr.on('data', function(data: any) {
-                    //     process.stderr.write(data);
-                    // });
+                    proc.stderr.on('data', function(data: any) {
+                        Logger.info(data.toString());
+                    });
 
                     proc.on('error', (err: any) => {
-                        console.log(err);
+                        Logger.error(err);
                         SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {error: 'ERROR_EXECUTING_SCRIPT'});
                         SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
                         reject(new Error("ERROR_EXECUTING_SCRIPT"));
                     });
                 
                     proc.on('close', (code: any, signal: any) => {
-                        // console.log('Test closed -> Code: ', code, '  Signal: ', signal);
+                        Logger.info('Test closed -> Code: ' + code + '  Signal: ' + signal);
                         try
                         {
                           resolve(result);

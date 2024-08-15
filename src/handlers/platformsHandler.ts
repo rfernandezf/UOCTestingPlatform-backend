@@ -2,6 +2,7 @@ import { ExecutionPlatform } from '@controllers/executionPlatformController';
 import { ExecutionPlatformRequest, executionPlatformRequestSchema } from '@interfaces/executionPlatform';
 import { ExecutionPlatformDAO } from '@models/executionPlatformDAO';
 import { environment } from '@utils/environment';
+import Logger from '@utils/logger';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
 const Ajv = require("ajv");
@@ -15,7 +16,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       res.send(executionPlatforms);
     }
     catch(err: any) {
-      console.log(err)
+      Logger.error(err);
     }
   }
 

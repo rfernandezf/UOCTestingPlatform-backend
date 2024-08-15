@@ -1,3 +1,5 @@
+import Logger from "./logger";
+
 export interface CustomHTTPError
 {
   status: number;
@@ -11,7 +13,7 @@ export function parseErrorCode(err: any): CustomHTTPError
     message: "Unknown error"
   };
 
-  console.log('----> ERROR: ', err.message)
+  Logger.error('----> API ERROR: ' + err.message);
 
   if(err.message == 'ELEMENT_NOT_FOUND') { error.status = 404; error.message="Entity not found"; }
   else if(err.message == 'INPUT_VALIDATION_ERROR') { error.status = 400; error.message="Input validation error"; }

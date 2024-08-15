@@ -12,6 +12,7 @@ import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
 import { environment } from '@utils/environment';
 import { SSEConnectionHandler } from './sse/sseConnection';
+import Logger from '@utils/logger';
 export const app: express.Application = express();
 
 const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.CERT_NAME!);
@@ -73,6 +74,7 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr?.port}`;
   console.info(`Server is listening on ${bind}`);
+  Logger.info(`Server is listening on ${bind}`);
 }
 
 server.listen(port);

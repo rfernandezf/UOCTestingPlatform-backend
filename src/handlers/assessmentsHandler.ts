@@ -12,6 +12,7 @@ import * as fs from "fs";
 import * as path from 'path';
 import { TestExecution } from '@handlers/testExecutionHandler';
 import { SSEConnectionHandler } from 'src/sse/sseConnection';
+import Logger from '@utils/logger';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -19,7 +20,7 @@ export const getAssessments = async (_req: express.Request, res: express.Respons
     res.send(assessments);
   }
   catch(err: any) {
-    console.log(err)
+    Logger.error(err);
   }
 }
 

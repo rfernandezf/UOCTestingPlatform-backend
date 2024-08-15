@@ -3,6 +3,7 @@ import { User } from '@controllers/userController';
 import { UserRequest, userRequestSchema } from '@interfaces/user';
 import { ClassroomsUsersDAO } from '@models/classroomsUsersDAO';
 import { UserDAO } from '@models/userDAO';
+import Logger from '@utils/logger';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
 const Ajv = require("ajv");
@@ -14,7 +15,7 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
       res.send(users);
     }
     catch(err: any) {
-      console.log(err)
+      Logger.error(err);
     }
   }
 

@@ -1,6 +1,7 @@
 import { Classroom } from '@controllers/classroomControlller';
 import { ClassroomRequest, classroomRequestSchema } from '@interfaces/classroom';
 import { ClassroomDAO } from '@models/classroomDAO';
+import Logger from '@utils/logger';
 import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 import express from 'express';
 const Ajv = require("ajv");
@@ -12,7 +13,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       res.send(classrooms);
     }
     catch(err: any) {
-      console.log(err)
+      Logger.error(err);
     }
   }
 
