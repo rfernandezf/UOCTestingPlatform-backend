@@ -77,7 +77,7 @@ export const deleteAssessment = async (_req: express.Request, res: express.Respo
     
     // Delete created folder and contents
     if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-        fs.rm(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true }, () => {});
+        fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
     }
     
     await assessments.delete(id);
@@ -146,7 +146,7 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
 
     // Delete created folder and contents
     if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-      fs.rm(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) , { recursive: true }, () => {});
+      fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) , { recursive: true });
     }
 
     assessment.fileName = '';

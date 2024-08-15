@@ -140,9 +140,9 @@ export class TestExecution
                         });
                     });
                 
-                    proc.stderr.on('data', function(data: any) {
-                        process.stderr.write(data);
-                    });
+                    // proc.stderr.on('data', function(data: any) {
+                    //     process.stderr.write(data);
+                    // });
 
                     proc.on('error', (err: any) => {
                         console.log(err);
