@@ -30,7 +30,7 @@ var fileRotateTransport = new (winston.transports.DailyRotateFile)({
   maxSize: '20m'
 });
 
-const transports = [new winston.transports.Console(), fileRotateTransport];
+const transports = [fileRotateTransport];
 const Logger = winston.createLogger({
   levels,
   format,

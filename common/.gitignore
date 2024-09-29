@@ -3,3 +3,7 @@
 /assessments
 /platforms
 /executions
+
+# Cert files
+/certs/*.key
+/certs/*.crt

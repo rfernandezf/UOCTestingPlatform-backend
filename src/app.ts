@@ -13,6 +13,7 @@ import router from './routes/index';
 import { environment } from '@utils/environment';
 import { SSEConnectionHandler } from './sse/sseConnection';
 import Logger from '@utils/logger';
+var cors = require('cors');
 export const app: express.Application = express();
 
 const CERT_PATH = path.join(process.env.COMMON_FOLDER!, environment.folders.certs, process.env.CERT_NAME!);
@@ -23,6 +24,7 @@ app.use(express.text());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use('/api/v1/', router);
 

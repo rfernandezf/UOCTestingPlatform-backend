@@ -4,6 +4,7 @@ import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, pos
 import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
 import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessmentsHandler';
+import { getPasswordlessToken } from '@handlers/authHandler';
 const multer = require('multer');
 
 const router = express.Router();
@@ -42,5 +43,7 @@ router.delete('/assessments/:id', deleteAssessment);
 router.post('/assessments/:id/files', multer().single('file'), uploadAssessmentFiles);
 router.delete('/assessments/:id/files', deleteAssessmentFiles);
 router.post('/assessments/:id/run/:sseClientId', multer().single('file'), runAssessment);
+
+router.post('/auth/emailToken', getPasswordlessToken);
 
 export default router;
