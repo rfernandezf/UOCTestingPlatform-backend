@@ -8,7 +8,7 @@ import { AssessmentRequest } from '@interfaces/assessment';
 import { Assessment } from '@controllers/assessmentController';
 import { dateToEpoch, epochToDate } from '@utils/dbUtils';
 import { environment } from '@utils/environment';
-import { SSEConnectionHandler } from 'src/sse/sseConnection';
+import { SSEConnectionHandler } from 'src/services/sseConnection';
 
 var assert = require('assert');
 

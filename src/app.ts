@@ -11,7 +11,7 @@ import { handleError } from './helpers/error';
 import httpLogger from './middlewares/httpLogger';
 import router from './routes/index';
 import { environment } from '@utils/environment';
-import { SSEConnectionHandler } from './sse/sseConnection';
+import { SSEConnectionHandler } from './services/sseConnection';
 import Logger from '@utils/logger';
 var cors = require('cors');
 export const app: express.Application = express();

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import yauzl from 'yauzl';
 import * as child_process from 'child_process'; 
 import { ExecutionScriptResponse } from "@interfaces/executionPlatform";
-import { SSEConnectionHandler } from "src/sse/sseConnection";
+import { SSEConnectionHandler } from "src/services/sseConnection";
 import Logger from "@utils/logger";
 
 export class TestExecution

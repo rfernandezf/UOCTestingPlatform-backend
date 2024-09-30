@@ -13,5 +13,9 @@ export const environment =
     },
     platforms: {
         scriptName: "run.sh"
+    },
+    auth: {
+        passcodeExpiration: 10, // In minutes
+        expiratedPasscodesChecking: 1 // In minutes
     }
 }
