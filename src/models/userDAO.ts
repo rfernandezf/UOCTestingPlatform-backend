@@ -55,6 +55,17 @@ export class UserDAO implements DAO<User>
         });
     }
 
+    async getByEmail(email: string): Promise<User> {
+        return new Promise(async (resolve, reject) => {
+            (await this.db).get('SELECT * FROM Users WHERE email = ?', email, function(err: Error | null, row: UserResponse) { 
+                if(err) reject(err);
+
+                if(row) resolve(new User(row.id, row.name, row.surnames, row.email, row.password, row.role_id));
+                else reject(new Error('ELEMENT_NOT_FOUND'));
+            });
+        });
+    }
+
     getAll(): Promise<Array<User>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all('SELECT * FROM Users', function(err: Error | null, rows: Array<UserResponse>) { 

@@ -71,6 +71,18 @@ describe('User DAO testing', function () {
         });
     });
 
+    describe('Get one element by email', function () {
+        it('Should correctly get the element', async function () {
+            await userDAO.getByEmail('dgarciaso@uoc.edu')
+            .then((res: User)=> {
+                assert.equal(user2.name, res.name);
+            })
+            .catch(() => {
+                assert.throws(iThrowError, 'First assert failed');
+            });
+        });
+    });
+
     describe('Update one element', function () {
         it('Should correctly update the element', async function () {
             user2.name = 'Juan David';

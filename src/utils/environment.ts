@@ -16,6 +16,7 @@ export const environment =
     },
     auth: {
         passcodeExpiration: 10, // In minutes
+        jwtExpiration: 60, // In minutes
         expiratedPasscodesChecking: 1 // In minutes
     }
 }

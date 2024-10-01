@@ -4,6 +4,9 @@ import { environment } from '../src/utils/environment';
 import dotenv from 'dotenv';
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+// Edit env var locally for running test scenarios
+process.env.RUNNING_TEST_SCENARIOS='true';
+
 if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.database.name))) fs.unlinkSync(path.join(process.env.COMMON_FOLDER!, environment.database.name));
 
 // DAO testing
