@@ -64,7 +64,7 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
         let body: JWTTokenRequest = _req.body;
 
         // Validate the passcode
-        if(!AuthService.getInstance().validatePasscode(body.email, body.passcode)) res.status(401).send();
+        if(!AuthService.getInstance().validatePasscode(body.email, Number(body.passcode))) res.status(401).send();
 
         else
         {

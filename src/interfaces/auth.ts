@@ -4,7 +4,7 @@ export interface PasswordlessTokenRequest {
 
 export interface JWTTokenRequest {
     email: string,
-    passcode: number
+    passcode: string
 }
 
 export const passwordlessTokenRequestSchema = {
@@ -26,7 +26,7 @@ export const JWTTokenRequestSchema = {
             "type": "string"
         },
         "passcode": {
-            "type": "number"
+            "type": "string"
         }
     },
     "type": "object"
