@@ -3,7 +3,7 @@ import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, pos
 import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
 import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessmentsHandler';
-import { requestJWTToken, requestPasscode } from '@handlers/authHandler';
+import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
 import { authenticateToken } from '@middlewares/authHeader';
 const multer = require('multer');
 
@@ -43,5 +43,6 @@ router.post('/assessments/:id/run/:sseClientId', authenticateToken, multer().sin
 
 router.post('/auth/passcode', requestPasscode);
 router.post('/auth/login', requestJWTToken);
+router.get('/auth/check', authenticateToken, loginCheck);
 
 export default router;

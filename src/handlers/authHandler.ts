@@ -115,3 +115,13 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
         res.status(error.status).send(error.message);
     }
   }
+
+  export const loginCheck = async (_req: express.Request, res: express.Response) => {
+    try {
+        res.send();
+    }
+    catch(err: any) {
+        let error: CustomHTTPError = parseErrorCode(err);
+        res.status(error.status).send(error.message);
+    }
+  }
