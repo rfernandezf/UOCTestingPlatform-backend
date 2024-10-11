@@ -18,6 +18,23 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
         let body: PasscodeRequest = _req.body;
 
+        // Check that the email domain is allowed
+        if(process.env.ALLOWED_EMAIL_DOMAINS)
+        {
+          let allowedDomains = process.env.ALLOWED_EMAIL_DOMAINS.split(", ");
+
+          if(allowedDomains.length > 0)
+          {
+            let receivedDomain = body.email.split("@")[1].split('.')[0];
+
+            // Do the check if list is not empty
+            if(!allowedDomains.some((domain) => domain == receivedDomain))
+            {
+              res.status(401).send();
+            }
+          }
+        }
+
         // Generate a temporary response token and store it for 10 minutes
         let passcode: number = AuthService.getInstance().generateLoginPasscode(body.email);
 
