@@ -75,6 +75,17 @@ export class ClassroomDAO implements DAO<Classroom>
         });
     }
 
+    async getByUUID(uuid: string): Promise<Classroom> {
+        return new Promise(async (resolve, reject) => {
+            (await this.db).get('SELECT * FROM Classrooms WHERE uuid = ?', uuid, function(err: Error | null, row: ClassroomResponse) { 
+                if(err) reject(err);
+
+                if(row) resolve(new Classroom(row.id, row.name, row.description, row.password, row.uuid));
+                else reject(new Error('ELEMENT_NOT_FOUND'));
+            });
+        });
+    }
+
     getAll(): Promise<Array<Classroom>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all('SELECT * FROM Classrooms', function(err: Error | null, rows: Array<ClassroomResponse>) { 

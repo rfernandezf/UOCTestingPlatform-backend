@@ -49,13 +49,29 @@ describe('Classroom DAO testing', function () {
     });
 
     describe('Get one element', function () {
-        it('Should correctly get the element', async function () {
+        let uuid: string = '';
+
+        it('Should correctly get the element by id', async function () {
             await classroomDAO.get(2)
             .then((res: Classroom)=> {
                 assert.equal(classroom2.name, res.name);
                 assert.equal(classroom2.description, res.description);
                 assert.equal(classroom2.uuid, res.uuid);
                 assert.equal(classroom2.password, res.password);
+
+                uuid = res.uuid;
+            })
+            .catch(() => {
+                
+                assert.throws(iThrowError, 'First assert failed');
+            });
+        });
+
+        it('Should correctly get the element by uuid', async function () {
+            await classroomDAO.getByUUID(uuid)
+            .then((res: Classroom)=> {
+                assert.equal(classroom2.name, res.name);
+                assert.equal(classroom2.description, res.description);
             })
             .catch(() => {
                 
