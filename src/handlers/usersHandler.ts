@@ -27,7 +27,7 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
 
       let body: UserRequest = _req.body;
 
-      let user = new User(0, body.name, body.surnames, body.email, body.password, body.role_id);
+      let user = new User(0, body.name, body.surnames, body.email, body.role_id);
       let users = await new UserDAO();
       user = await users.create(user);
       res.send(user);
@@ -47,7 +47,7 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
       let body: UserRequest = _req.body;
       let id: number = +_req.params.id;
 
-      let user = new User(id, body.name, body.surnames, body.email, body.password, body.role_id);
+      let user = new User(id, body.name, body.surnames, body.email, body.role_id);
       let Users = await new UserDAO();
       user = await Users.update(user);
       res.send(user);

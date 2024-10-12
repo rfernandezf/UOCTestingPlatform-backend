@@ -6,16 +6,14 @@ export class User
     private _name: string;
     private _surnames: string;
     private _email: string;
-    private _password: string;
     private _userRole: UserRole;
 
-    constructor(id: number, name: string, surnames: string, email: string, password: string, userRole: UserRole)
+    constructor(id: number, name: string, surnames: string, email: string, userRole: UserRole)
     {
         this._id = id;
         this._name = name;
         this._surnames = surnames;
         this._email = email;
-        this._password = password;
         this._userRole = userRole;
     }
 
@@ -37,11 +35,6 @@ export class User
     get email(): string
     {
         return this._email;
-    }
-
-    get password(): string
-    {
-        return this._password;
     }
 
     get userRole(): UserRole
@@ -67,11 +60,6 @@ export class User
     set email(email: string)
     {
         this._email = email;
-    }
-
-    set password(password: string)
-    {
-        this._password = password;
     }
 
     set userRole(userRole: UserRole)

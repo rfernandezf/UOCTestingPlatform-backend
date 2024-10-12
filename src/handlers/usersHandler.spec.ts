@@ -13,8 +13,8 @@ describe('API REST - /api/v1/users', function () {
     describe('GET /users', function () {
         it('Should correctly return the users', async function () {
             const mockUsers: Array<User> = [
-                new User(2,  "Juan David", "G. Solórzano", "DGarciaso@uoc.edu", "43214321", 2),
-                new User(3,  "Juan", "John Doe", "juanjohndoe@uoc.edu", "0000", 2)
+                new User(2,  "Juan David", "G. Solórzano", "DGarciaso@uoc.edu", 2),
+                new User(3,  "Juan", "John Doe", "juanjohndoe@uoc.edu", 2)
             ];
 
             const response = await request(app).get('/api/v1/users');
@@ -30,11 +30,10 @@ describe('API REST - /api/v1/users', function () {
                 name: 'Rafael',
                 surnames: 'Fernandez',
                 email: 'rfl@test.com',
-                password: '1111',
                 role_id: 1
             }
 
-            let mockUser = new User(4,  "Rafael", "Fernandez", "rfl@test.com", "1111", 1);
+            let mockUser = new User(4,  "Rafael", "Fernandez", "rfl@test.com", 1);
 
             const response = await request(app).post('/api/v1/users').send(userRequest);
             assert.equal(response.status, 200);
@@ -59,7 +58,6 @@ describe('API REST - /api/v1/users', function () {
                 name: 'Rafael',
                 surnames: 'Fernandez',
                 email: 'rfl@test.com',
-                password: '1111',
                 role_id: 1
             }
 
@@ -70,7 +68,7 @@ describe('API REST - /api/v1/users', function () {
 
     describe('GET /users/:id', function () {
         it('Should correctly return the user', async function () {
-            let mockUser = new User(4,  "Rafael", "Fernandez", "rfl@test.com", "1111", 1);
+            let mockUser = new User(4,  "Rafael", "Fernandez", "rfl@test.com", 1);
 
             const response = await request(app).get('/api/v1/users/4');
 
@@ -91,11 +89,10 @@ describe('API REST - /api/v1/users', function () {
                 name: 'Rafael',
                 surnames: 'Fernandez Flores',
                 email: 'rfl@uoc.edu',
-                password: '1111',
                 role_id: 1
             }
 
-            let mockUser = new User(3,  "Rafael", "Fernandez Flores", "rfl@uoc.edu", "1111", 1);
+            let mockUser = new User(3,  "Rafael", "Fernandez Flores", "rfl@uoc.edu", 1);
 
             const response = await request(app).put('/api/v1/users/3').send(userRequest);
             assert.equal(response.status, 200);
@@ -107,7 +104,6 @@ describe('API REST - /api/v1/users', function () {
                 name: 'Rafael',
                 surnames: 'Fernandez Flores',
                 email: 'rfl@uoc.edu',
-                password: '1111',
                 role_id: 1
             }
 
@@ -121,7 +117,6 @@ describe('API REST - /api/v1/users', function () {
                 badname: 'Rafael',
                 surnames: 'Fernandez Flores',
                 email: 'rfl@uoc.edu',
-                password: '1111',
                 role_id: 1
             }
 

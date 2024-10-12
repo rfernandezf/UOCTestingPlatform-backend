@@ -11,9 +11,9 @@ function iThrowError(err: string) {
 describe('User DAO testing', function () {
     let userDAO: UserDAO = new UserDAO();
 
-    let user1 = new User(0, 'Rafael', 'Fernández Flores', 'rfernandezflo@uoc.edu', '1234', UserRole.ADMIN);
-    let user2 = new User(0, 'David', 'García Solórzano', 'dgarciaso@uoc.edu', '4321', UserRole.ADMIN);
-    let user3 = new User(0, 'Juan', 'John Doe', 'juanjohndoe@uoc.edu', '0000', UserRole.STUDENT);
+    let user1 = new User(0, 'Rafael', 'Fernández Flores', 'rfernandezflo@uoc.edu', UserRole.ADMIN);
+    let user2 = new User(0, 'David', 'García Solórzano', 'dgarciaso@uoc.edu', UserRole.ADMIN);
+    let user3 = new User(0, 'Juan', 'John Doe', 'juanjohndoe@uoc.edu', UserRole.STUDENT);
 
     describe('Insert elements', function () {
         it('Should correctly insert the elements', async function () {
@@ -23,7 +23,6 @@ describe('User DAO testing', function () {
                 assert.equal(user1.name, res.name);
                 assert.equal(user1.surnames, res.surnames);
                 assert.equal(user1.email, res.email);
-                assert.equal(user1.password, res.password);
                 assert.equal(user1.userRole, res.userRole);
                 user1 = res;
             })
@@ -36,7 +35,6 @@ describe('User DAO testing', function () {
                 assert.equal(user2.name, res.name);
                 assert.equal(user2.surnames, res.surnames);
                 assert.equal(user2.email, res.email);
-                assert.equal(user2.password, res.password);
                 assert.equal(user2.userRole, res.userRole);
                 user2 = res;
             })
@@ -49,7 +47,6 @@ describe('User DAO testing', function () {
                 assert.equal(user3.name, res.name);
                 assert.equal(user3.surnames, res.surnames);
                 assert.equal(user3.email, res.email);
-                assert.equal(user3.password, res.password);
                 assert.equal(user3.userRole, res.userRole);
                 user3 = res;
             })
@@ -88,7 +85,6 @@ describe('User DAO testing', function () {
             user2.name = 'Juan David';
             user2.surnames = 'G. Solórzano';
             user2.email = 'DGarciaso@uoc.edu';
-            user2.password = '43214321';
             user2.userRole = 2;
 
             await userDAO.update(user2)
@@ -96,7 +92,6 @@ describe('User DAO testing', function () {
                 assert.equal(user2.name, res.name);
                 assert.equal(user2.surnames, res.surnames);
                 assert.equal(user2.email, res.email);
-                assert.equal(user2.password, res.password);
                 assert.equal(user2.userRole, res.userRole);
                 user2 = res;
             })
@@ -109,7 +104,6 @@ describe('User DAO testing', function () {
                 assert.equal('Juan David', res.name);
                 assert.equal('G. Solórzano', res.surnames);
                 assert.equal('DGarciaso@uoc.edu', res.email);
-                assert.equal('43214321', res.password);
                 assert.equal(2, res.userRole);
             })
             .catch(() => {

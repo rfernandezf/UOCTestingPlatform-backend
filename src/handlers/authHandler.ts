@@ -96,7 +96,7 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
           let user = await userDAO.getByEmail(body.email)
           .catch(async (err) => {
-              let userRequest: User = new User(0, '', '', body.email, '', 2);
+              let userRequest: User = new User(0, '', '', body.email, 2);
 
               // Add user to the DB
               user = await userDAO.create(userRequest);

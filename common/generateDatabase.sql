@@ -45,7 +45,6 @@ CREATE TABLE Users (
 	name TEXT NOT NULL,
 	surnames TEXT NOT NULL,
 	email TEXT UNIQUE NOT NULL,
-	password TEXT NOT NULL,
 	role_id INTEGER,
 	FOREIGN KEY(role_id) REFERENCES UserRoles(id)
 );

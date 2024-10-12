@@ -85,7 +85,7 @@ export class ClassroomsUsersDAO
                 let response: Array<User> = [];
 
                 rows.forEach((row: UserResponse) => {
-                    response.push(new User(row.id, row.name, row.surnames, row.email, row.password, row.role_id));
+                    response.push(new User(row.id, row.name, row.surnames, row.email, row.role_id));
                 })
 
                 if(response && response.length > 0) resolve(response);

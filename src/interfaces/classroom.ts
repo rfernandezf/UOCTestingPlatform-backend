@@ -21,6 +21,9 @@ export const classroomRequestSchema = {
         },
         "name": {
             "type": "string"
+        },
+        "password": {
+            "type": "string"
         }
     },
     "type": "object"
