@@ -26,8 +26,22 @@ describe('API REST - /api/v1/assessments', () => {
             assert.equal(response.body[0]._name, "Python Renamed Assessment");
             assert.equal(response.body[1]._name, "C# Assessment");
 
-            mockAssessments.push(response.body[0] as Assessment);
-            mockAssessments.push(response.body[1] as Assessment);
+            mockAssessments.push(new Assessment(
+                response.body[0]._id,
+                response.body[0]._name, 
+                response.body[0]._description, 
+                response.body[0]._publishDate, 
+                response.body[0]._expirationDate, 
+                response.body[0]._executionPlatformID, 
+                response.body[0]._classroomID));
+            mockAssessments.push(new Assessment(
+                response.body[1]._id,
+                response.body[1]._name, 
+                response.body[1]._description, 
+                response.body[1]._publishDate, 
+                response.body[1]._expirationDate, 
+                response.body[1]._executionPlatformID, 
+                response.body[1]._classroomID));
         });
     });
 
@@ -52,10 +66,12 @@ describe('API REST - /api/v1/assessments', () => {
                 assessmentRequest.classroom_id);
 
             const response = await request(app).post('/api/v1/assessments').send(assessmentRequest);
-            assert.equal(response.status, 200);
-            assert.equal(response.body, mockAssessment.toString());
+            response.body._testPath = ""; // Delete UUID for comparing object result
 
-            mockAssessments.push(response.body);
+            assert.equal(response.status, 200);
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockAssessment));
+
+            mockAssessments.push(mockAssessment);
         });
 
         it('Should give an input validation error on wrong parameters (400)', async () => {
@@ -118,9 +134,10 @@ describe('API REST - /api/v1/assessments', () => {
     describe('GET /assessments/:id', () => {
         it('Should correctly return the assessment', async () => {
             const response = await request(app).get('/api/v1/assessments/4');
+            response.body._testPath = ""; // Delete UUID for comparing object result
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockAssessments[2].toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockAssessments[2]));
         });
 
         it('Should return an 404 not found', async () => {
@@ -145,8 +162,10 @@ describe('API REST - /api/v1/assessments', () => {
             mockAssessments[2].description = 'Java assessment description edited';
 
             const response = await request(app).put('/api/v1/assessments/4').send(assessmentRequest);
+            response.body._testPath = ""; // Delete UUID for comparing object result
+
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockAssessments[2].toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockAssessments[2]));
         });
 
         it('Should return an 404 not found', async () => {

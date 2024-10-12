@@ -9,9 +9,9 @@ function iThrowError(err: string) {
 describe('Classroom DAO testing', function () {
     let classroomDAO: ClassroomDAO = new ClassroomDAO();
 
-    let classroom1 = new Classroom(0, 'Java classroom', 'Classroom for the Java subject');
-    let classroom2 = new Classroom(0, 'Python classroom', 'Classroom for the Python subject');
-    let classroom3 = new Classroom(0, 'C# classroom', 'Classroom for the C# subject');
+    let classroom1 = new Classroom(0, 'Java classroom', 'Classroom for the Java subject', '1234');
+    let classroom2 = new Classroom(0, 'Python classroom', 'Classroom for the Python subject', '4321');
+    let classroom3 = new Classroom(0, 'C# classroom', 'Classroom for the C# subject', '0000');
 
     describe('Insert elements', function () {
         it('Should correctly insert the elements', async function () {
@@ -54,8 +54,11 @@ describe('Classroom DAO testing', function () {
             .then((res: Classroom)=> {
                 assert.equal(classroom2.name, res.name);
                 assert.equal(classroom2.description, res.description);
+                assert.equal(classroom2.uuid, res.uuid);
+                assert.equal(classroom2.password, res.password);
             })
             .catch(() => {
+                
                 assert.throws(iThrowError, 'First assert failed');
             });
         });
@@ -65,11 +68,14 @@ describe('Classroom DAO testing', function () {
         it('Should correctly update the element', async function () {
             classroom2.name = 'Renamed Python classroom';
             classroom2.description = 'Renamed classroom for the Python subject';
+            classroom2.password = 'MyNewPasswordHere';
 
             await classroomDAO.update(classroom2)
             .then((res: Classroom)=> {
                 assert.equal(classroom2.name, res.name);
                 assert.equal(classroom2.description, res.description);
+                assert.equal(classroom2.uuid, res.uuid);
+                assert.equal(classroom2.password, res.password);
                 classroom2 = res;
             })
             .catch(() => {
@@ -80,6 +86,8 @@ describe('Classroom DAO testing', function () {
             .then((res: Classroom)=> {
                 assert.equal('Renamed Python classroom', res.name);
                 assert.equal('Renamed classroom for the Python subject', res.description);
+                assert.equal(classroom2.uuid, res.uuid);
+                assert.equal('MyNewPasswordHere', res.password);
             })
             .catch(() => {
                 assert.throws(iThrowError, 'Second assert failed');

@@ -3,6 +3,7 @@ import { ClassroomResponse } from "@interfaces/classroom";
 import { DAO } from "@interfaces/DAO";
 import dbConnection from "@utils/dbConnection";
 import { RunResult } from "sqlite3";
+import { v4 as uuidv4 } from 'uuid';
 
 export class ClassroomDAO implements DAO<Classroom>
 {
@@ -12,8 +13,11 @@ export class ClassroomDAO implements DAO<Classroom>
 
     create(entity: Classroom): Promise<Classroom> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("INSERT INTO Classrooms (name, description) VALUES (?, ?)", [entity.name, entity.description], function (this: RunResult, err: Error | null) { 
+            let classroomUUID: string = uuidv4();
+
+            (await this.db).run("INSERT INTO Classrooms (name, description, password, uuid) VALUES (?, ?, ?, ?)", [entity.name, entity.description, entity.password, classroomUUID], function (this: RunResult, err: Error | null) { 
                 if(this.lastID) entity.id = this.lastID;
+                entity.uuid = classroomUUID;
 
                 if(err) reject(err);
 
@@ -24,7 +28,7 @@ export class ClassroomDAO implements DAO<Classroom>
 
     update(entity: Classroom): Promise<Classroom> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE Classrooms SET name = ?, description = ? WHERE id = ?", [entity.name, entity.description, entity.id], function (this: RunResult, err: Error | null) {                
+            (await this.db).run("UPDATE Classrooms SET name = ?, description = ?, password = ? WHERE id = ?", [entity.name, entity.description, entity.password, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
                 if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
@@ -49,7 +53,7 @@ export class ClassroomDAO implements DAO<Classroom>
             (await this.db).get('SELECT * FROM Classrooms WHERE id = ?', id, function(err: Error | null, row: ClassroomResponse) { 
                 if(err) reject(err);
 
-                if(row) resolve(new Classroom(row.id, row.name, row.description));
+                if(row) resolve(new Classroom(row.id, row.name, row.description, row.password, row.uuid));
                 else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
@@ -63,7 +67,7 @@ export class ClassroomDAO implements DAO<Classroom>
                 let response: Array<Classroom> = [];
 
                 rows.forEach((row: ClassroomResponse) => {
-                    response.push(new Classroom(row.id, row.name, row.description));
+                    response.push(new Classroom(row.id, row.name, row.description, "", row.uuid)); // Intentionally not returning the password on getAll() for security reasons
                 })
 
                 if(response && response.length > 0) resolve(response);

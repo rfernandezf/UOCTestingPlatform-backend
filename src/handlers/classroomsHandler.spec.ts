@@ -17,21 +17,24 @@ describe('API REST - /api/v1/classrooms', function () {
             ];
 
             const response = await request(app).get('/api/v1/classrooms');
+            response.body.forEach((classroom: any) => classroom._uuid = ""); // Delete UUID for comparing object result
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockClassrooms.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassrooms));
         });
     });
 
     describe('POST /classrooms', function () {
         it('Should create a new classroom', async function () {
-            let classroomRequest: ClassroomRequest = { name: 'Java classroom', description: "Classroom for the Java subject" }
+            let classroomRequest: ClassroomRequest = { name: 'Java classroom', description: "Classroom for the Java subject", password: ""}
 
             let mockClassroom = new Classroom(4,  "Java classroom", "Classroom for the Java subject");
 
             const response = await request(app).post('/api/v1/classrooms').send(classroomRequest);
+            response.body._uuid = ""; // Delete UUID for comparing object result
+
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockClassroom.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassroom));
         });
 
         it('Should give an input validation error on wrong parameters (400)', async function () {
@@ -42,7 +45,7 @@ describe('API REST - /api/v1/classrooms', function () {
         });
 
         it('Should give a foreign key error on duplicate name (409)', async function () {
-            let classroomRequest: ClassroomRequest = { name: 'Java classroom', description: "Different description of the classroom for the Java subject" }
+            let classroomRequest: ClassroomRequest = { name: 'Java classroom', description: "Different description of the classroom for the Java subject", password: ""}
 
             const response = await request(app).post('/api/v1/classrooms').send(classroomRequest);
             assert.equal(response.status, 409);
@@ -54,9 +57,10 @@ describe('API REST - /api/v1/classrooms', function () {
             let mockClassroom = new Classroom(4,  "Java classroom", "Classroom for the Java subject");
 
             const response = await request(app).get('/api/v1/classrooms/4');
+            response.body._uuid = ""; // Delete UUID for comparing object result
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockClassroom.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassroom));
         });
 
         it('Should return an 404 not found', async function () {
@@ -68,17 +72,18 @@ describe('API REST - /api/v1/classrooms', function () {
 
     describe('PUT /classrooms/:id', function () {
         it('Should edit the classroom', async function () {
-            let classroomRequest: ClassroomRequest = { name: 'C# classroom edited', description: "Edited classroom for the C# subject" }
+            let classroomRequest: ClassroomRequest = { name: 'C# classroom edited', description: "Edited classroom for the C# subject", password: ""}
 
-            let mockClassroom = new Classroom(4,  "C# classroom edited", "Edited classroom for the C# subject");
+            let mockClassroom = new Classroom(3,  "C# classroom edited", "Edited classroom for the C# subject");
 
             const response = await request(app).put('/api/v1/classrooms/3').send(classroomRequest);
+
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockClassroom.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassroom));
         });
 
         it('Should return an 404 not found', async function () {
-            let classroomRequest: ClassroomRequest = { name: 'C# classroom edited', description: "Edited classroom for the C# subject" }
+            let classroomRequest: ClassroomRequest = { name: 'C# classroom edited', description: "Edited classroom for the C# subject", password: ""}
 
             const response = await request(app).put('/api/v1/classrooms/40').send(classroomRequest);
 

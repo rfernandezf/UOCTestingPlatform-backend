@@ -20,7 +20,7 @@ describe('API REST - /api/v1/users', function () {
             const response = await request(app).get('/api/v1/users');
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockUsers.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockUsers));
         });
     });
 
@@ -38,7 +38,7 @@ describe('API REST - /api/v1/users', function () {
 
             const response = await request(app).post('/api/v1/users').send(userRequest);
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockUser.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockUser));
         });
 
         it('Should give an input validation error on wrong parameters (400)', async function () {
@@ -75,7 +75,7 @@ describe('API REST - /api/v1/users', function () {
             const response = await request(app).get('/api/v1/users/4');
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockUser.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockUser));
         });
 
         it('Should return an 404 not found', async function () {
@@ -95,11 +95,11 @@ describe('API REST - /api/v1/users', function () {
                 role_id: 1
             }
 
-            let mockUser = new User(4,  "Rafael", "Fernandez Flores", "rfl@uoc.edu", "1111", 1);
+            let mockUser = new User(3,  "Rafael", "Fernandez Flores", "rfl@uoc.edu", "1111", 1);
 
             const response = await request(app).put('/api/v1/users/3').send(userRequest);
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockUser.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockUser));
         });
 
         it('Should return an 404 not found', async function () {
@@ -157,9 +157,10 @@ describe('API REST - /api/v1/users', function () {
             let mockClassrooms: Array<Classroom> = [new Classroom(2,  "Renamed Python classroom", "Renamed classroom for the Python subject")];
 
             const response = await request(app).get('/api/v1/users/2/classrooms');
+            response.body[0]._password = ""; // Delete password for comparing object result
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockClassrooms.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassrooms));
         });
     });
 

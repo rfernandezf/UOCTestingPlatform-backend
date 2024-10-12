@@ -112,7 +112,7 @@ export class ClassroomsUsersDAO
                 let response: Array<Classroom> = [];
 
                 rows.forEach((row: ClassroomResponse) => {
-                    response.push(new Classroom(row.id, row.name, row.description));
+                    response.push(new Classroom(row.id, row.name, row.description, row.uuid));
                 })
 
                 if(response && response.length > 0) resolve(response);

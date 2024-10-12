@@ -25,7 +25,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
 
       let body: ClassroomRequest = _req.body;
 
-      let classroom = new Classroom(0, body.name, body.description);
+      let classroom = new Classroom(0, body.name, body.description, body.password);
       let classrooms = await new ClassroomDAO();
       classroom = await classrooms.create(classroom);
       res.send(classroom);
@@ -45,7 +45,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       let body: ClassroomRequest = _req.body;
       let id: number = +_req.params.id;
 
-      let classroom = new Classroom(id, body.name, body.description);
+      let classroom = new Classroom(id, body.name, body.description, body.password);
       let Classrooms = await new ClassroomDAO();
       classroom = await Classrooms.update(classroom);
       res.send(classroom);
@@ -77,6 +77,8 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
 
       let classrooms = await new ClassroomDAO();
       let classroom = await classrooms.get(id);
+
+      classroom.password = ""; // Remove classroom password from the object for security reasons
 
       res.send(classroom);
     }

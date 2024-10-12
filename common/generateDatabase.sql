@@ -30,7 +30,9 @@ CREATE TABLE Assessments (
 CREATE TABLE Classrooms (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT UNIQUE NOT NULL,
-	description TEXT NOT NULL
+	description TEXT NOT NULL,
+	password TEXT,
+	uuid TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE UserRoles (

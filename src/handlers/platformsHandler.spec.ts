@@ -24,7 +24,7 @@ describe('API REST - /api/v1/platforms', function () {
             const response = await request(app).get('/api/v1/platforms');
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockPlatforms.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockPlatforms));
         });
     });
 
@@ -36,7 +36,7 @@ describe('API REST - /api/v1/platforms', function () {
 
             const response = await request(app).post('/api/v1/platforms').send(platformRequest);
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockPlatform.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockPlatform));
 
             // Check folder creation
             assert(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName)));
@@ -64,7 +64,7 @@ describe('API REST - /api/v1/platforms', function () {
             const response = await request(app).get('/api/v1/platforms/4');
 
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockPlatform.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockPlatform));
         });
 
         it('Should return an 404 not found', async function () {
@@ -82,7 +82,7 @@ describe('API REST - /api/v1/platforms', function () {
 
             const response = await request(app).put('/api/v1/platforms/3').send(platformRequest);
             assert.equal(response.status, 200);
-            assert.equal(response.body, mockPlatform.toString());
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockPlatform));
 
             // Check folder creation
             assert(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName)));
@@ -145,7 +145,7 @@ describe('API REST - /api/v1/platforms', function () {
             if(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName, environment.platforms.scriptName)))
             {
                 let readBuffer = fs.readFileSync(path.join(process.env.COMMON_FOLDER!, environment.folders.platforms, mockPlatform.internalName, environment.platforms.scriptName));
-                assert.equal(javaPlatformScript, readBuffer.toString());
+                assert.equal(JSON.stringify(javaPlatformScript), JSON.stringify(readBuffer.toString()));
             }
 
             else assert(false);

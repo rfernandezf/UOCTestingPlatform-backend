@@ -1,12 +1,15 @@
 export interface ClassroomResponse {
     id: number,
     name: string,
-    description: string
+    description: string,
+    uuid: string,
+    password: string
 }
 
 export interface ClassroomRequest {
     name: string,
-    description: string   
+    description: string,
+    password: string
 }
 
 export const classroomRequestSchema = {
