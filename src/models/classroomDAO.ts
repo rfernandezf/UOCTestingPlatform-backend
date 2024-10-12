@@ -28,13 +28,29 @@ export class ClassroomDAO implements DAO<Classroom>
 
     update(entity: Classroom): Promise<Classroom> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE Classrooms SET name = ?, description = ?, password = ? WHERE id = ?", [entity.name, entity.description, entity.password, entity.id], function (this: RunResult, err: Error | null) {                
-                if(err) reject(err);
-                if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
+            // Workaround, if password is empty we're not updating it
+            // The good solution should be to do a PATCH method and make the password and other fields optional when sending the request
+            if(entity.password == "")
+            {
+                (await this.db).run("UPDATE Classrooms SET name = ?, description = ? WHERE id = ?", [entity.name, entity.description, entity.id], function (this: RunResult, err: Error | null) {                
+                    if(err) reject(err);
+                    if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
-                resolve(entity);
-            });
-        });
+                    resolve(entity);
+                });
+            }
+
+            else
+            {
+                (await this.db).run("UPDATE Classrooms SET name = ?, description = ?, password = ? WHERE id = ?", [entity.name, entity.description, entity.password, entity.id], function (this: RunResult, err: Error | null) {                
+                    if(err) reject(err);
+                    if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
+
+                    resolve(entity);
+                });
+            }
+        }
+    );
     }
 
     delete(id: number): Promise<void> {
