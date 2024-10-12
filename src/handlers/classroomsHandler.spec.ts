@@ -35,6 +35,10 @@ describe('API REST - /api/v1/classrooms', function () {
 
             assert.equal(response.status, 200);
             assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassroom));
+
+            // Create another extra classroom for future usage
+            let classroomRequest2: ClassroomRequest = { name: 'Paswordless classroom', description: "Classroom for testing", password: ""}
+            await request(app).post('/api/v1/classrooms').send(classroomRequest2);
         });
 
         it('Should give an input validation error on wrong parameters (400)', async function () {
@@ -53,10 +57,23 @@ describe('API REST - /api/v1/classrooms', function () {
     });
 
     describe('GET /classrooms/:id', function () {
-        it('Should correctly return the classroom', async function () {
+        let uuid = '';
+
+        it('Should correctly return the classroom by id', async function () {
             let mockClassroom = new Classroom(4,  "Java classroom", "Classroom for the Java subject");
 
             const response = await request(app).get('/api/v1/classrooms/4');
+            uuid = response.body._uuid;
+            response.body._uuid = ""; // Delete UUID for comparing object result
+
+            assert.equal(response.status, 200);
+            assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassroom));
+        });
+
+        it('Should correctly return the classroom by UUID', async function () {
+            let mockClassroom = new Classroom(4,  "Java classroom", "Classroom for the Java subject");
+
+            const response = await request(app).get('/api/v1/classrooms/' + uuid);
             response.body._uuid = ""; // Delete UUID for comparing object result
 
             assert.equal(response.status, 200);

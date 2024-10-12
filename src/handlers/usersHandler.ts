@@ -1,6 +1,7 @@
 import { Classroom } from '@controllers/classroomControlller';
 import { User } from '@controllers/userController';
-import { UserRequest, userRequestSchema } from '@interfaces/user';
+import { UserRequest, userRequestSchema, UserToClassroomRequest, userToClassroomRequestSchema } from '@interfaces/user';
+import { ClassroomDAO } from '@models/classroomDAO';
 import { ClassroomsUsersDAO } from '@models/classroomsUsersDAO';
 import { UserDAO } from '@models/userDAO';
 import Logger from '@utils/logger';
@@ -106,11 +107,33 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
 
   export const postUserToClassroom = async (_req: express.Request, res: express.Response) => {
     try {
+      // Validate input
+      const validate = ajv.compile(userToClassroomRequestSchema)
+      if (!validate(_req.body)) throw new Error('INPUT_VALIDATION_ERROR');
+
+      let body: UserToClassroomRequest = _req.body;
+
       let id_user: number = +_req.params.id_user;
       let id_classroom: number = +_req.params.id_classroom;
 
-      let classrooms2Users = await new ClassroomsUsersDAO();
+      // Check that password for login into the classroom matches if exists
+      let classroomDAO = await new ClassroomDAO();
+      let password = "";
+      try
+      {
+        password = (await classroomDAO.get(id_classroom)).password;
+      } catch(e) {}
 
+      if(password !== "")
+      {
+        if(!body.password || password !== body.password) 
+        {
+          res.status(401).send();
+          return;
+        }
+      }
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
       await classrooms2Users.addUserToClassroom(id_user, id_classroom)
       .then(() => { res.send(); })
       .catch((err) => { throw err; });

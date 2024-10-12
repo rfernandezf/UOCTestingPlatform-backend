@@ -18,6 +18,10 @@ export interface UserRequest {
     role_id: number    
 }
 
+export interface UserToClassroomRequest {
+    password?: string 
+}
+
 export const userRequestSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "required": ["email","name","role_id","surnames"],
@@ -32,6 +36,17 @@ export const userRequestSchema = {
             "type": "number"
         },
         "surnames": {
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
+
+export const userToClassroomRequestSchema = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "required": [],
+    "properties": {
+        "password": {
             "type": "string"
         }
     },

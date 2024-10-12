@@ -31,6 +31,7 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
             if(!allowedDomains.some((domain) => domain == receivedDomain))
             {
               res.status(401).send();
+              return;
             }
           }
         }
@@ -81,7 +82,11 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
         let body: JWTTokenRequest = _req.body;
 
         // Validate the passcode
-        if(!AuthService.getInstance().validatePasscode(body.email, Number(body.passcode))) res.status(401).send();
+        if(!AuthService.getInstance().validatePasscode(body.email, Number(body.passcode))) 
+        {
+          res.status(401).send();
+          return;
+        }
 
         else
         {

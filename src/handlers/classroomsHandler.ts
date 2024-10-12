@@ -73,10 +73,13 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
 
   export const getSingleClassroom = async (_req: express.Request, res: express.Response) => {
     try {
-      let id: number = +_req.params.id;
+      let id: any = _req.params.id;
 
       let classrooms = await new ClassroomDAO();
-      let classroom = await classrooms.get(id);
+      let classroom: Classroom;
+
+      if(!isNaN(Number(id))) classroom = await classrooms.get(id);
+      else classroom = await classrooms.getByUUID(id);
 
       classroom.password = ""; // Remove classroom password from the object for security reasons
 
@@ -87,4 +90,3 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       res.status(error.status).send(error.message);
     }
   }
-

@@ -161,17 +161,27 @@ describe('API REST - /api/v1/users', function () {
 
     describe('POST /users/:id_user/classrooms/:id_classroom', function () {
         it('Should correctly add the user to the classroom', async function () {
+            const response = await request(app).post('/api/v1/users/2/classrooms/5');
+            assert.equal(response.status, 200);
+        });
+
+        it('Should give an unauthorized since password it is not provided (401)', async function () {
             const response = await request(app).post('/api/v1/users/2/classrooms/3');
+            assert.equal(response.status, 401);
+        });
+
+        it('Should correctly add the user to the classroom', async function () {
+            const response = await request(app).post('/api/v1/users/2/classrooms/3').send({password: '0000'});
             assert.equal(response.status, 200);
         });
 
         it('Should give a foreign key error on duplicate relationship (409)', async function () {
-            const response = await request(app).post('/api/v1/users/2/classrooms/3');
+            const response = await request(app).post('/api/v1/users/2/classrooms/3').send({password: '0000'});
             assert.equal(response.status, 409);
         });
 
         it('Should return an 422 - Foreign key violation: User not found', async function () {
-            const response = await request(app).post('/api/v1/users/20/classrooms/3');
+            const response = await request(app).post('/api/v1/users/20/classrooms/3').send({password: '0000'});
             assert.equal(response.status, 422);
         });
 
