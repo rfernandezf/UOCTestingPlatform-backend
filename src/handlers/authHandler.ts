@@ -134,10 +134,9 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
       try
       {
-       await users.getByEmail(userEmail);
-       return res.send();
-      } catch(err)
-      {
+        await users.getByEmail(userEmail);
+        return res.send();
+      } catch(err) {
         return res.status(401).send();
       }
     }
