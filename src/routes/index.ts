@@ -19,9 +19,6 @@ router.put('/platforms/:id/script', authenticateToken, putPlatformScript);
 
 router.get('/users', authenticateToken, getUsers);
 router.post('/users', authenticateToken, postUser);
-router.get('/users/:id', authenticateToken, getSingleUser);
-router.put('/users/:id', authenticateToken, putUser);
-router.delete('/users/:id', authenticateToken, deleteUser);
 // UserToClassroom based on JWT
 router.get('/users/classrooms', authenticateToken, getClassroomsInUserJWT);
 router.post('/users/classrooms/:id_classroom', authenticateToken, postUserToClassroomJWT);
@@ -30,6 +27,10 @@ router.delete('/users/classrooms/:id_classroom', authenticateToken, deleteUserFr
 router.get('/users/:id/classrooms', authenticateToken, getClassroomsInUser);
 router.post('/users/:id_user/classrooms/:id_classroom', authenticateToken, postUserToClassroom);
 router.delete('/users/:id_user/classrooms/:id_classroom', authenticateToken, deleteUserFromClassroom);
+// Rest of users endpoints
+router.get('/users/:id', authenticateToken, getSingleUser);
+router.put('/users/:id', authenticateToken, putUser);
+router.delete('/users/:id', authenticateToken, deleteUser);
 
 router.get('/classrooms', authenticateToken, getClassrooms);
 router.post('/classrooms', authenticateToken, postClassroom);

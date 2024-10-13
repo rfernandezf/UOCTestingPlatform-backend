@@ -99,7 +99,11 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
           let userDAO = new UserDAO();
           let missingUserData = false; 
 
-          let user = await userDAO.getByEmail(body.email)
+          let user: User;
+          userDAO.getByEmail(body.email)
+          .then((res) => {
+            user = res;
+          })
           .catch(async (err) => {
               let userRequest: User = new User(0, '', '', body.email, 2);
 
@@ -107,12 +111,12 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
               user = await userDAO.create(userRequest);
 
               missingUserData = true;
+          })
+          .finally(() => {
+            if((user as User).name == '' || (user as User).surnames == '') missingUserData = true;
+
+            return res.send({jwt: token, missingUserData});            
           });
-
-          if((user as User).name == '' || (user as User).surnames == '') missingUserData = true;
-
-
-          res.send({jwt: token, missingUserData});
         }
     }
     catch(err: any) {
@@ -123,7 +127,19 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
   export const loginCheck = async (_req: express.Request, res: express.Response) => {
     try {
-        res.send();
+      let userEmail: string = '';
+      if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+      let users = await new UserDAO();
+
+      try
+      {
+       await users.getByEmail(userEmail);
+       return res.send();
+      } catch(err)
+      {
+        return res.status(401).send();
+      }
     }
     catch(err: any) {
         let error: CustomHTTPError = parseErrorCode(err);
