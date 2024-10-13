@@ -105,6 +105,28 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
     }
   }
 
+  export const getClassroomsInUserJWT = async (_req: express.Request, res: express.Response) => {
+    try {
+      let userEmail: string = '';
+      if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+      let users = await new UserDAO();
+
+      let id: number = (await users.getByEmail(userEmail)).id;
+    
+      let classrooms2Users = await new ClassroomsUsersDAO();
+
+      let classrooms: Array<Classroom> = await classrooms2Users.getClassroomsInUser(id);
+
+      res.send(classrooms);
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
+
   export const postUserToClassroom = async (_req: express.Request, res: express.Response) => {
     try {
       // Validate input
@@ -144,9 +166,75 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
     }
   }
 
+  export const postUserToClassroomJWT = async (_req: express.Request, res: express.Response) => {
+    try {
+      // Validate input
+      const validate = ajv.compile(userToClassroomRequestSchema)
+      if (!validate(_req.body)) throw new Error('INPUT_VALIDATION_ERROR');
+
+      let body: UserToClassroomRequest = _req.body;
+
+      let userEmail: string = '';
+      if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+      let users = await new UserDAO();
+
+      let id_user: number = (await users.getByEmail(userEmail)).id;
+      let id_classroom: number = +_req.params.id_classroom;
+
+      // Check that password for login into the classroom matches if exists
+      let classroomDAO = await new ClassroomDAO();
+      let password = "";
+      try
+      {
+        password = (await classroomDAO.get(id_classroom)).password;
+      } catch(e) {}
+
+      if(password !== "")
+      {
+        if(!body.password || password !== body.password) 
+        {
+          res.status(401).send();
+          return;
+        }
+      }
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
+      await classrooms2Users.addUserToClassroom(id_user, id_classroom)
+      .then(() => { res.send(); })
+      .catch((err) => { throw err; });
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
   export const deleteUserFromClassroom = async (_req: express.Request, res: express.Response) => {
     try {
       let id_user: number = +_req.params.id_user;
+      let id_classroom: number = +_req.params.id_classroom;
+
+      let classrooms2Users = await new ClassroomsUsersDAO();
+
+      await classrooms2Users.deleteUserFromClassroom(id_user, id_classroom)
+      .then(() => { res.send(); })
+      .catch((err) => { throw err; });
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
+
+  export const deleteUserFromClassroomJWT = async (_req: express.Request, res: express.Response) => {
+    try {
+      let userEmail: string = '';
+      if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+      let users = await new UserDAO();
+
+      let id_user: number = (await users.getByEmail(userEmail)).id;
       let id_classroom: number = +_req.params.id_classroom;
 
       let classrooms2Users = await new ClassroomsUsersDAO();

@@ -1,6 +1,6 @@
 import express from 'express';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
-import { deleteUser, deleteUserFromClassroom, getClassroomsInUser, getSingleUser, getUsers, postUser, postUserToClassroom, putUser } from '@handlers/usersHandler';
+import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
 import { deleteAssessment, deleteAssessmentFiles, getAssessments, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
@@ -22,6 +22,11 @@ router.post('/users', authenticateToken, postUser);
 router.get('/users/:id', authenticateToken, getSingleUser);
 router.put('/users/:id', authenticateToken, putUser);
 router.delete('/users/:id', authenticateToken, deleteUser);
+// UserToClassroom based on JWT
+router.get('/users/classrooms', authenticateToken, getClassroomsInUserJWT);
+router.post('/users/classrooms/:id_classroom', authenticateToken, postUserToClassroomJWT);
+router.delete('/users/classrooms/:id_classroom', authenticateToken, deleteUserFromClassroomJWT);
+// UserToClassroom manual user IDs -deprecated-
 router.get('/users/:id/classrooms', authenticateToken, getClassroomsInUser);
 router.post('/users/:id_user/classrooms/:id_classroom', authenticateToken, postUserToClassroom);
 router.delete('/users/:id_user/classrooms/:id_classroom', authenticateToken, deleteUserFromClassroom);
