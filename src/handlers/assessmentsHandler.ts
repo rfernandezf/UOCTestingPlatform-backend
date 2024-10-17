@@ -161,6 +161,21 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
   }
 }
 
+export const getAssessmentsInClassroom = async (_req: express.Request, res: express.Response) => {
+  try {
+    let classroomId: number = +_req.params.id_classroom;
+
+    let assessments = await new AssessmentDAO();
+    let assessment = await assessments.getByClassroom(classroomId);
+
+    res.send(assessment);
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
 /**
  * Phases:
  * - Student uploads the assessment to this endpoint

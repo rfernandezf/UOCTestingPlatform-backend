@@ -72,6 +72,23 @@ export class AssessmentDAO implements DAO<Assessment>
         });
     }
 
+    async getByClassroom(classroomId: number): Promise<Array<Assessment>> {
+        return new Promise(async (resolve, reject) => {
+            (await this.db).all('SELECT a.* FROM Assessments a, Classrooms c WHERE a.classroom_id = c.id AND c.id = ?', classroomId, function(err: Error | null, rows: Array<AssessmentResponse>) { 
+                if(err) reject(err);
+                
+                let response: Array<Assessment> = [];
+
+                rows.forEach((row: AssessmentResponse) => {
+                    response.push(new Assessment(row.id, row.name, row.description, epochToDate(row.publish_date), epochToDate(row.expiration_date), row.platform_id, row.classroom_id, row.test_path, row.file_name));
+                })
+                
+                if(response && response.length > 0) resolve(response);
+                else reject(new Error('ELEMENT_NOT_FOUND'));
+            });
+        });
+    }
+
     getAll(): Promise<Array<Assessment>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all('SELECT * FROM Assessments', function(err: Error | null, rows: Array<AssessmentResponse>) { 
