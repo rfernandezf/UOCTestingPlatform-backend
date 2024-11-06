@@ -2,7 +2,7 @@ import express from 'express';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
 import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
-import { deleteAssessment, deleteAssessmentFiles, getAssessmentRunInfo, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles } from '@handlers/assessmentsHandler';
+import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
 import { authenticateToken } from '@middlewares/authHeader';
 const multer = require('multer');
@@ -46,7 +46,8 @@ router.put('/assessments/:id', authenticateToken, putAssessment);
 router.delete('/assessments/:id', authenticateToken, deleteAssessment);
 router.post('/assessments/:id/files', authenticateToken, multer().single('file'), uploadAssessmentFiles);
 router.delete('/assessments/:id/files', authenticateToken, deleteAssessmentFiles);
-router.get('/assessments/:id/run/', authenticateToken, getAssessmentRunInfo);
+router.get('/assessments/:id/run/', authenticateToken, getAssessmentsRunInfoByUser);
+router.get('/assessments/run/:id', authenticateToken, getAssessmentRunInfo);
 router.post('/assessments/:id/run/:sseClientId', authenticateToken, multer().single('file'), runAssessment);
 
 router.post('/auth/passcode', requestPasscode);

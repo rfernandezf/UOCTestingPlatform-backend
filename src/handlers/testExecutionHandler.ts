@@ -157,7 +157,7 @@ export class TestExecution
                         reject(new Error("ERROR_EXECUTING_SCRIPT"));
                     });
                 
-                    proc.on('close', (code: any, signal: any) => {
+                    proc.on('close', async (code: any, signal: any) => {
                         Logger.info('Test closed -> Code: ' + code + '  Signal: ' + signal);
                         try
                         {
@@ -167,8 +167,7 @@ export class TestExecution
                             SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
                             reject(new Error("ERROR_EXECUTING_SCRIPT")); 
                         } finally {
-                            // Close SSE session
-                            SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
+
 
                             let endTime = new Date();
 
@@ -189,7 +188,13 @@ export class TestExecution
                                 Math.floor((endTime.getTime()-startTime.getTime())/1000), 
                                 JSON.stringify(result), this._sseClientId);
 
-                            assessmentExecution.create(execution);
+                            let runInfo = await assessmentExecution.create(execution);
+
+                            // Send assessmentExecutionID
+                            SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {assessmentExecutionID: runInfo.id});
+
+                            // Close SSE session
+                            SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
                         }
                     });
                 }

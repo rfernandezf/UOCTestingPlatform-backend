@@ -233,7 +233,7 @@ export const runAssessment = async (_req: express.Request, res: express.Response
 }
 
 
-export const getAssessmentRunInfo = async (_req: express.Request, res: express.Response) => {
+export const getAssessmentsRunInfoByUser = async (_req: express.Request, res: express.Response) => {
   try {
     let userEmail: string = '';
     if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
@@ -246,6 +246,21 @@ export const getAssessmentRunInfo = async (_req: express.Request, res: express.R
     let assessmentRuns = await assessmentExecution.getByUserID(id);
 
     res.send(assessmentRuns);
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
+export const getAssessmentRunInfo = async (_req: express.Request, res: express.Response) => {
+  try {
+    let id: number = +_req.params.id;
+
+    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentRun = await assessmentExecution.get(id);
+
+    res.send(assessmentRun);
   }
   catch(err: any) {
     let error: CustomHTTPError = parseErrorCode(err);
