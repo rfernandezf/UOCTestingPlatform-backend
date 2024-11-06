@@ -8,10 +8,19 @@ export class AssessmentExecution
     private _executionDate: Date;
     private _passedTests: number;
     private _failedTests: number;
+    private _executionTime: number;
     private _logOutput: string;
     private _executionID: string;
 
-    constructor(id: number, assessmentID: number, userID: number, executionDate: Date, passedTests: number, failedTests: number, logOutput: string, executionID: string) 
+    constructor(id: number, 
+        assessmentID: number, 
+        userID: number, 
+        executionDate: Date, 
+        passedTests: number, 
+        failedTests: number, 
+        executionTime: number,
+        logOutput: string, 
+        executionID: string) 
     {
       this._id = id;
       this._assessmentID = assessmentID;
@@ -19,6 +28,7 @@ export class AssessmentExecution
       this._executionDate = executionDate;
       this._passedTests = passedTests;
       this._failedTests = failedTests;
+      this._executionTime = executionTime;
       this._logOutput = logOutput;
       this._executionID = executionID;
     }
@@ -51,6 +61,11 @@ export class AssessmentExecution
     get failedTests(): number
     {
         return this._failedTests;
+    }
+
+    get executionTime(): number
+    {
+        return this._executionTime;
     }
 
     get logOutput(): string
@@ -91,6 +106,11 @@ export class AssessmentExecution
     set failedTests(failedTests: number)
     {
         this._failedTests = failedTests;
+    }
+
+    set executionTime(executionTime: number)
+    {
+        this._executionTime = executionTime;
     }
 
     set logOutput(logOutput: string)

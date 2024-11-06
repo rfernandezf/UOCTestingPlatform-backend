@@ -16,8 +16,8 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
         return new Promise(async (resolve, reject) => {
             let pathNameUUID: string = uuidv4();
 
-            (await this.db).run("INSERT INTO AssessmentExecutions (assessment_id, user_id, execution_date, passed_tests, failed_tests, log_output, execution_id) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                [entity.assessmentID, entity.userID, dateToEpoch(entity.executionDate), entity.passedTests, entity.failedTests, entity.logOutput, entity.executionID], function (this: RunResult, err: Error | null) { 
+            (await this.db).run("INSERT INTO AssessmentExecutions (assessment_id, user_id, execution_date, passed_tests, failed_tests, execution_time, log_output, execution_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                [entity.assessmentID, entity.userID, dateToEpoch(entity.executionDate), entity.passedTests, entity.failedTests, entity.executionTime, entity.logOutput, entity.executionID], function (this: RunResult, err: Error | null) { 
                 if(this.lastID) 
                 {
                     entity.id = this.lastID;
@@ -32,8 +32,8 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
 
     update(entity: AssessmentExecution): Promise<AssessmentExecution> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).run("UPDATE AssessmentExecutions SET assessment_id = ?, user_id = ?, execution_date = ?, passed_tests = ?, failed_tests = ?, log_output = ?, execution_id = ? WHERE id = ?", 
-                [entity.assessmentID, entity.userID, dateToEpoch(entity.executionDate), entity.passedTests, entity.failedTests, entity.logOutput, entity.executionID, entity.id], function (this: RunResult, err: Error | null) {                
+            (await this.db).run("UPDATE AssessmentExecutions SET assessment_id = ?, user_id = ?, execution_date = ?, passed_tests = ?, failed_tests = ?, execution_time = ?, log_output = ?, execution_id = ? WHERE id = ?", 
+                [entity.assessmentID, entity.userID, dateToEpoch(entity.executionDate), entity.passedTests, entity.failedTests, entity.executionTime, entity.logOutput, entity.executionID, entity.id], function (this: RunResult, err: Error | null) {                
                 if(err) reject(err);
                 if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 
@@ -65,7 +65,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
             (await this.db).get('SELECT * FROM AssessmentExecutions WHERE id = ?', id, function(err: Error | null, row: AssessmentExecutionResponse) { 
                 if(err) reject(err);
                 
-                if(row) resolve(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.log_output, row.execution_id));
+                if(row) resolve(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.execution_time, row.log_output, row.execution_id));
                 else reject(new Error('ELEMENT_NOT_FOUND'));
             });
         });
@@ -79,7 +79,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
                 let response: Array<AssessmentExecution> = [];
 
                 rows.forEach((row: AssessmentExecutionResponse) => {
-                    response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.log_output, row.execution_id));
+                    response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.execution_time, row.log_output, row.execution_id));
                 })
 
                 if(response && response.length > 0) resolve(response);
@@ -96,7 +96,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
                 let response: Array<AssessmentExecution> = [];
 
                 rows.forEach((row: AssessmentExecutionResponse) => {
-                    response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.log_output, row.execution_id));
+                    response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.execution_time, row.log_output, row.execution_id));
                 })
 
                 if(response && response.length > 0) resolve(response);

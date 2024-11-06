@@ -119,6 +119,7 @@ export class TestExecution
                     fs.copyFileSync(scriptPath, path.join(executionPath, environment.platforms.scriptName));
                     fs.chmodSync(path.join(executionPath, environment.platforms.scriptName), '777');
 
+                    let startTime = new Date();
                     var proc = child_process.spawn('./' + environment.platforms.scriptName, {cwd: executionPath});
 
                     let receivedDataBuffer: string = '';
@@ -169,6 +170,8 @@ export class TestExecution
                             // Close SSE session
                             SSEConnectionHandler.getInstance().closeConnection(this._sseClientId);
 
+                            let endTime = new Date();
+
                             // Delete the files after ending with the execution
                             if (fs.existsSync(executionPath)) {
                                 fs.rm(executionPath, { recursive: true }, () => {});
@@ -176,7 +179,15 @@ export class TestExecution
 
                             let assessmentExecution = new AssessmentExecutionDAO();
 
-                            let execution = new AssessmentExecution(0, this._assessment.id, this._userID, new Date(), result.filter((line) => line.status == 'PASSED').length, result.filter((line) => line.status == 'FAILED').length, JSON.stringify(result), this._sseClientId);
+                            let execution = new AssessmentExecution(
+                                0, 
+                                this._assessment.id, 
+                                this._userID, 
+                                new Date(), 
+                                result.filter((line) => line.status == 'PASSED').length, 
+                                result.filter((line) => line.status == 'FAILED').length, 
+                                Math.floor((endTime.getTime()-startTime.getTime())/1000), 
+                                JSON.stringify(result), this._sseClientId);
 
                             assessmentExecution.create(execution);
                         }
