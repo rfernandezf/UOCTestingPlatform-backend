@@ -17,7 +17,7 @@ export class AssessmentDAO implements DAO<Assessment>
             let pathNameUUID: string = uuidv4();
 
             (await this.db).run("INSERT INTO Assessments (name, description, publish_date, expiration_date, platform_id, classroom_id, test_path, file_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, pathNameUUID, ''], function (this: RunResult, err: Error | null) { 
+                [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, pathNameUUID, entity.fileName], function (this: RunResult, err: Error | null) { 
                 if(this.lastID) 
                 {
                     entity.id = this.lastID;

@@ -32,7 +32,7 @@ export class ClassroomDAO implements DAO<Classroom>
             // The good solution should be to do a PATCH method and make the password and other fields optional when sending the request
             if(entity.password == "")
             {
-                (await this.db).run("UPDATE Classrooms SET name = ?, description = ? WHERE id = ?", [entity.name, entity.description, entity.id], function (this: RunResult, err: Error | null) {                
+                (await this.db).run("UPDATE Classrooms SET name = ?, description = ?, password = ? WHERE id = ?", [entity.name, entity.description, entity.password, entity.id], function (this: RunResult, err: Error | null) {                
                     if(err) reject(err);
                     if(this.changes == 0) reject(new Error('ELEMENT_NOT_FOUND'));
 

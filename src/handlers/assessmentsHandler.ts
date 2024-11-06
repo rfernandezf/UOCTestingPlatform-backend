@@ -13,6 +13,8 @@ import * as path from 'path';
 import { TestExecution } from '@handlers/testExecutionHandler';
 import { SSEConnectionHandler } from 'src/services/sseConnection';
 import Logger from '@utils/logger';
+import { UserDAO } from '@models/userDAO';
+import { AssessmentExecutionDAO } from '@models/assessmentExecutionDAO';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -32,7 +34,7 @@ export const postAssessment = async (_req: express.Request, res: express.Respons
 
     let body: AssessmentRequest = _req.body;
 
-    let assessment = new Assessment(0, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id);
+    let assessment = new Assessment(0, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, '');
     let assessments = await new AssessmentDAO();
     assessment = await assessments.create(assessment);
 
@@ -191,6 +193,13 @@ export const getAssessmentsInClassroom = async (_req: express.Request, res: expr
  */
 export const runAssessment = async (_req: express.Request, res: express.Response) => {
   try {
+    let userEmail: string = '';
+    if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+    let users = await new UserDAO();
+
+    let userID: number = (await users.getByEmail(userEmail)).id;
+
     let id: number = +_req.params.id;
     let sseClientId: string = _req.params.sseClientId;
 
@@ -208,7 +217,7 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     if(_req.file)
     {
       // Create new execution
-      let testExecution: TestExecution = new TestExecution(assessment, _req.file.buffer, sseClientId);
+      let testExecution: TestExecution = new TestExecution(assessment, userID, _req.file.buffer, sseClientId);
 
       await testExecution.run();
       res.status(202).send();
@@ -217,6 +226,27 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     else throw new Error("INPUT_VALIDATION_ERROR");
   }
 
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
+
+export const getAssessmentRunInfo = async (_req: express.Request, res: express.Response) => {
+  try {
+    let userEmail: string = '';
+    if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+    let users = await new UserDAO();
+
+    let id: number = (await users.getByEmail(userEmail)).id;
+
+    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentRuns = await assessmentExecution.getByUserID(id);
+
+    res.send(assessmentRuns);
+  }
   catch(err: any) {
     let error: CustomHTTPError = parseErrorCode(err);
     res.status(error.status).send(error.message);

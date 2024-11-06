@@ -190,6 +190,8 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
         password = (await classroomDAO.get(id_classroom)).password;
       } catch(e) {}
 
+      console.log('-----> PASSWORD: ', password)
+
       if(password !== "")
       {
         if(!body.password || password !== body.password) 

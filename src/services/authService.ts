@@ -1,4 +1,3 @@
-import { dateToEpoch } from "@utils/dbUtils";
 import { environment } from "@utils/environment";
 
 interface PasscodeInfo {

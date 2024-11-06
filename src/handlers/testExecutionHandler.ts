@@ -10,17 +10,21 @@ import * as child_process from 'child_process';
 import { ExecutionScriptResponse } from "@interfaces/executionPlatform";
 import { SSEConnectionHandler } from "src/services/sseConnection";
 import Logger from "@utils/logger";
+import { AssessmentExecutionDAO } from "@models/assessmentExecutionDAO";
+import { AssessmentExecution } from "@controllers/assessmentExecutionController";
 
 export class TestExecution
 {
     private _assessment: Assessment;
+    private _userID: number;
     private _file: Buffer;
     private _uuid: string;
     private _sseClientId: string;
 
-    constructor(assessment: Assessment, file: Buffer, sseClientId: string)
+    constructor(assessment: Assessment, userID: number, file: Buffer, sseClientId: string)
     {
         this._assessment = assessment;
+        this._userID = userID;
         this._file = file;
         this._uuid = uuidv4();
         this._sseClientId = sseClientId;
@@ -169,6 +173,12 @@ export class TestExecution
                             if (fs.existsSync(executionPath)) {
                                 fs.rm(executionPath, { recursive: true }, () => {});
                             }
+
+                            let assessmentExecution = new AssessmentExecutionDAO();
+
+                            let execution = new AssessmentExecution(0, this._assessment.id, this._userID, new Date(), result.filter((line) => line.status == 'PASSED').length, result.filter((line) => line.status == 'FAILED').length, JSON.stringify(result), this._sseClientId);
+
+                            assessmentExecution.create(execution);
                         }
                     });
                 }

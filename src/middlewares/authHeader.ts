@@ -1,6 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { epochToDate } from '@utils/dbUtils';
+import { msEpochToDate } from '@utils/dbUtils';
 
 export const authenticateToken=(_req: express.Request, res: express.Response, next: any)=> {
 
@@ -21,7 +21,7 @@ export const authenticateToken=(_req: express.Request, res: express.Response, ne
             if(err) return res.sendStatus(401);
 
             // Check token expiration date
-            if(epochToDate(data.exp) <= new Date()) return res.sendStatus(401);
+            if(msEpochToDate(data.exp) <= new Date()) return res.sendStatus(401);
             
             // Store user inside the request
             _req.headers['user'] = data.email;

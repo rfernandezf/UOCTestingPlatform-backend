@@ -1,6 +1,7 @@
 export enum UserRole {
     ADMIN=1,
-    STUDENT=2
+    STUDENT=2,
+    TEACHER=3
 }
 
 export interface UserResponse {

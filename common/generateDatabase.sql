@@ -27,6 +27,19 @@ CREATE TABLE Assessments (
 	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id)
 );
 
+CREATE TABLE AssessmentExecutions (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	assessment_id INTEGER,
+	user_id INTEGER,
+	execution_date INTEGER NOT NULL,
+	passed_tests INTEGER,
+	failed_tests INTEGER,
+	log_output TEXT NOT NULL,
+	execution_id TEXT NOT NULL,
+	FOREIGN KEY(assessment_id) REFERENCES Assessments(id),
+	FOREIGN KEY(user_id) REFERENCES Users(id)
+);
+
 CREATE TABLE Classrooms (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name TEXT UNIQUE NOT NULL,
@@ -61,6 +74,7 @@ CREATE TABLE Classrooms_2_users (
 /* ----- INSERTS ----- */
 INSERT INTO UserRoles VALUES (1, 'ADMIN');
 INSERT INTO UserRoles VALUES (2, 'STUDENT');
+INSERT INTO UserRoles VALUES (3, 'TEACHER');
 
 /* ----- TEST DATA ----- */
 -- INSERT INTO ExecutionPlatforms (name) VALUES ('Test');
