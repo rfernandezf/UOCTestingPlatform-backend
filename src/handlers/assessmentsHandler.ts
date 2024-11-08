@@ -15,6 +15,8 @@ import { SSEConnectionHandler } from 'src/services/sseConnection';
 import Logger from '@utils/logger';
 import { UserDAO } from '@models/userDAO';
 import { AssessmentExecutionDAO } from '@models/assessmentExecutionDAO';
+import { AssessmentExecution } from '@controllers/assessmentExecutionController';
+import { UserRole } from '@interfaces/user';
 
 export const getAssessments = async (_req: express.Request, res: express.Response) => {
   try {
@@ -254,17 +256,22 @@ export const downloadAssessmentFile = async (_req: express.Request, res: express
 export const getAssessmentsRunInfoByUser = async (_req: express.Request, res: express.Response) => {
   try {
     let assessmentID: number = +_req.params.id;
+    let requestedUserID: number | undefined = undefined;
+    if(_req.query.userID) requestedUserID = parseInt(_req.query.userID as string);
 
     let userEmail: string = '';
     if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
     let users = new UserDAO();
-
-    let userID: number = (await users.getByEmail(userEmail)).id;
+    let user = await users.getByEmail(userEmail);
 
     let assessmentExecution = new AssessmentExecutionDAO();
+    let assessmentRuns: Array<AssessmentExecution> = [];
 
-    let assessmentRuns = await assessmentExecution.getByUserID(assessmentID, userID);
+    if(requestedUserID && user.userRole == UserRole.STUDENT) throw new Error("UNAUTHORIZED");
+
+    if(requestedUserID && user.userRole != UserRole.STUDENT) assessmentRuns = await assessmentExecution.getByUserID(assessmentID, requestedUserID);
+    else assessmentRuns = await assessmentExecution.getByUserID(assessmentID, user.id);
 
     res.send(assessmentRuns);
   }

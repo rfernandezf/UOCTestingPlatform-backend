@@ -110,7 +110,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
             (await this.db).all(
                 'SELECT assessment_id, assessment_name, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
                 'SELECT a.id AS assessment_id, a.name AS assessment_name, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
-                'ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY ae.execution_date DESC) AS row_num ' +
+                'ROW_NUMBER() OVER (PARTITION BY a.id, u.id ORDER BY ae.execution_date DESC) AS row_num ' +
                 'FROM AssessmentExecutions ae, Assessments a, Users u, Classrooms c ' +
                 'WHERE ae.assessment_id = a.id AND ae.user_id = u.id AND a.classroom_id = c.id) AS ranked ' +
                 'WHERE row_num = 1 ORDER BY execution_date DESC;', 
