@@ -240,20 +240,9 @@ export const downloadAssessmentFile = async (_req: express.Request, res: express
     let assessmentRun = await assessmentExecution.get(id);
 
     let assessmentFilePath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessmentRun.executionID, "assessment.zip");
-    console.log('----> DOWNLOAD: ', assessmentFilePath)
-
-    res.setHeader('Content-disposition', 'attachment; filename=assessment.zip');
-    res.setHeader('Content-type', 'application/zip');
 
     // Download assessment file
-    if (fs.existsSync(assessmentFilePath)) {
-        //res.send(fs.readFileSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessmentRun.executionID, "assessment.zip")));
-        // var filestream = fs.createReadStream(assessmentFilePath);
-        // filestream.pipe(res);
-        // res.send()
-        res.download(assessmentFilePath, "assessment.zip");
-      }
-    
+    if (fs.existsSync(assessmentFilePath)) res.download(assessmentFilePath, "assessment.zip");
     else throw new Error("ELEMENT_NOT_FOUND");
   }
   catch(err: any) {
