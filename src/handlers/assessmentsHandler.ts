@@ -39,8 +39,8 @@ export const postAssessment = async (_req: express.Request, res: express.Respons
     assessment = await assessments.create(assessment);
 
     // Create a folder with the UUID inside assessments folder
-    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-        fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
+    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath))) {
+        fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath), { recursive: true });
     }
 
     res.send(assessment);
@@ -79,8 +79,8 @@ export const deleteAssessment = async (_req: express.Request, res: express.Respo
     let assessment = await assessments.get(id);
     
     // Delete created folder and contents
-    if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-        fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
+    if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath))) {
+        fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath), { recursive: true });
     }
     
     await assessments.delete(id);
@@ -116,13 +116,13 @@ export const uploadAssessmentFiles = async (_req: express.Request, res: express.
     let assessment = await assessments.get(id);
 
     // Create a folder with the UUID inside assessments folder
-    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-      fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath), { recursive: true });
+    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath))) {
+      fs.mkdirSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath), { recursive: true });
     }
     
     if(_req.file)
     {
-      let filePath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath, _req.file.originalname)
+      let filePath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath, _req.file.originalname)
       fs.writeFileSync(filePath, _req.file.buffer);
 
       assessment.fileName = _req.file.originalname;
@@ -148,8 +148,8 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
     let assessment = await assessments.get(id);
 
     // Delete created folder and contents
-    if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath))) {
-      fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath) , { recursive: true });
+    if (fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath))) {
+      fs.rmSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath) , { recursive: true });
     }
 
     assessment.fileName = '';
@@ -207,7 +207,7 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     let assessment = await assessments.get(id);
 
     // Create a folder with the UUID inside assessments folder
-    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment.testPath, assessment.fileName))) {
+    if (!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment.testPath, assessment.fileName))) {
       throw new Error("NO_UNITARY_TESTS_FOUND");
     }
 
@@ -232,18 +232,50 @@ export const runAssessment = async (_req: express.Request, res: express.Response
   }
 }
 
+export const downloadAssessmentFile = async (_req: express.Request, res: express.Response) => {
+  try {
+    let id: number = +_req.params.id;
+
+    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentRun = await assessmentExecution.get(id);
+
+    let assessmentFilePath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessmentRun.executionID, "assessment.zip");
+    console.log('----> DOWNLOAD: ', assessmentFilePath)
+
+    res.setHeader('Content-disposition', 'attachment; filename=assessment.zip');
+    res.setHeader('Content-type', 'application/zip');
+
+    // Download assessment file
+    if (fs.existsSync(assessmentFilePath)) {
+        //res.send(fs.readFileSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessmentRun.executionID, "assessment.zip")));
+        // var filestream = fs.createReadStream(assessmentFilePath);
+        // filestream.pipe(res);
+        // res.send()
+        res.download(assessmentFilePath, "assessment.zip");
+      }
+    
+    else throw new Error("ELEMENT_NOT_FOUND");
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
 
 export const getAssessmentsRunInfoByUser = async (_req: express.Request, res: express.Response) => {
   try {
+    let assessmentID: number = +_req.params.id;
+
     let userEmail: string = '';
     if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
     let users = await new UserDAO();
 
-    let id: number = (await users.getByEmail(userEmail)).id;
+    let userID: number = (await users.getByEmail(userEmail)).id;
 
     let assessmentExecution = await new AssessmentExecutionDAO();
-    let assessmentRuns = await assessmentExecution.getByUserID(id);
+
+    let assessmentRuns = await assessmentExecution.getByUserID(assessmentID, userID);
 
     res.send(assessmentRuns);
   }

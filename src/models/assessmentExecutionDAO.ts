@@ -71,9 +71,9 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
         });
     }
 
-    getByUserID(id: number): Promise<Array<AssessmentExecution>> {
+    getByUserID(assessmentID: number, userID: number): Promise<Array<AssessmentExecution>> {
         return new Promise(async (resolve, reject) => {
-            (await this.db).all('SELECT * FROM AssessmentExecutions WHERE user_id = ? ORDER BY execution_date ASC', id, function(err: Error | null, rows: Array<AssessmentExecutionResponse>) { 
+            (await this.db).all('SELECT * FROM AssessmentExecutions WHERE assessment_id = ? AND user_id = ? ORDER BY execution_date ASC', assessmentID, userID, function(err: Error | null, rows: Array<AssessmentExecutionResponse>) { 
                 if(err) reject(err);
 
                 let response: Array<AssessmentExecution> = [];

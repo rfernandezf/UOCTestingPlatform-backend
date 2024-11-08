@@ -3,6 +3,7 @@
 /assessments
 /platforms
 /executions
+/assessmentTests
 
 # Cert files
 /certs/*.key

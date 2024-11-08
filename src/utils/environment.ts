@@ -1,6 +1,7 @@
 export const environment =
 {
     folders: {
+        assessmentTests: "/assessmentTests",
         assessments: "/assessments",
         certs: "/certs",
         platforms: "/platforms",

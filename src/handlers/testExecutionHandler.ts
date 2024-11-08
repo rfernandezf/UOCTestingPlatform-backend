@@ -35,13 +35,14 @@ export class TestExecution
         try
         {
             // Download zip received from the student into a new execution folder
-            let executionPath = path.join(process.env.COMMON_FOLDER!, environment.folders.executions, this._uuid)
+            let executionPath = path.join(process.env.COMMON_FOLDER!, environment.folders.executions, this._uuid);
+            
             if (!fs.existsSync(executionPath)) {
                 fs.mkdirSync(executionPath, { recursive: true });
             }
 
             fs.writeFileSync(path.join(executionPath, "assessment.zip"), this._file);
-
+            
             // Uncompress it and delete the zip file
             await this.uncompressZip(
                 path.join(executionPath, "assessment.zip"),
@@ -50,7 +51,7 @@ export class TestExecution
 
             // Uncompress zip file with the test battery uploaded by the teacher
             await this.uncompressZip(
-                path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, this._assessment.testPath, this._assessment.fileName), 
+                path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, this._assessment.testPath, this._assessment.fileName), 
                 executionPath);
 
             // Get associated execution platform and copy it's running script to our execution folder
@@ -189,6 +190,15 @@ export class TestExecution
                                 JSON.stringify(result), this._sseClientId);
 
                             let runInfo = await assessmentExecution.create(execution);
+
+                            // Store the uploaded file
+                            let assessmentsPath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, this._sseClientId);
+
+                            if (!fs.existsSync(assessmentsPath)) {
+                                fs.mkdirSync(assessmentsPath, { recursive: true });
+                            }
+                
+                            fs.writeFileSync(path.join(assessmentsPath, "assessment.zip"), this._file);
 
                             // Send assessmentExecutionID
                             SSEConnectionHandler.getInstance().sendEvent(this._sseClientId, {assessmentExecutionID: runInfo.id});

@@ -236,7 +236,7 @@ describe('API REST - /api/v1/assessments', () => {
 
             // Check if file were uploaded successfully
             let assessment: any = getResponse.body;
-            assert(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment._testPath, assessment._fileName)));
+            assert(fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment._testPath, assessment._fileName)));
         });
     });
 
@@ -250,7 +250,7 @@ describe('API REST - /api/v1/assessments', () => {
             assert.equal(response.status, 200);
 
             // Check if file has been deleted or not
-            assert(!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessment._testPath, assessment._fileName)));
+            assert(!fs.existsSync(path.join(process.env.COMMON_FOLDER!, environment.folders.assessmentTests, assessment._testPath, assessment._fileName)));
         });
 
         it('Should return an 404 not found', async () => {
