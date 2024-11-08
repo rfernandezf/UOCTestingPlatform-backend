@@ -130,7 +130,7 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
       let userEmail: string = '';
       if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
-      let users = await new UserDAO();
+      let users = new UserDAO();
 
       try
       {

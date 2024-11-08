@@ -2,7 +2,7 @@ import express from 'express';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
 import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
-import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile } from '@handlers/assessmentsHandler';
+import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile, getAllAssessmentsRunInfo } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
 import { authenticateToken } from '@middlewares/authHeader';
 const multer = require('multer');
@@ -40,6 +40,7 @@ router.delete('/classrooms/:id', authenticateToken, deleteClassroom);
 
 router.get('/assessments', authenticateToken, getAssessments);
 router.post('/assessments', authenticateToken, postAssessment);
+router.get('/assessments/run', authenticateToken, getAllAssessmentsRunInfo);
 router.get('/assessments/:id', authenticateToken, getSingleAssessment);
 router.get('/assessments/classrooms/:id_classroom', authenticateToken, getAssessmentsInClassroom);
 router.put('/assessments/:id', authenticateToken, putAssessment);

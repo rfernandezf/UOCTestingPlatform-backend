@@ -35,7 +35,7 @@ export const postAssessment = async (_req: express.Request, res: express.Respons
     let body: AssessmentRequest = _req.body;
 
     let assessment = new Assessment(0, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, '');
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     assessment = await assessments.create(assessment);
 
     // Create a folder with the UUID inside assessments folder
@@ -61,7 +61,7 @@ export const putAssessment = async (_req: express.Request, res: express.Response
     let id: number = +_req.params.id;
 
     let assessment = new Assessment(id, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id);
-    let Assessments = await new AssessmentDAO();
+    let Assessments = new AssessmentDAO();
     assessment = await Assessments.update(assessment);
     res.send(assessment);
   }
@@ -75,7 +75,7 @@ export const deleteAssessment = async (_req: express.Request, res: express.Respo
   try {
     let id: number = +_req.params.id;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.get(id);
     
     // Delete created folder and contents
@@ -97,7 +97,7 @@ export const getSingleAssessment = async (_req: express.Request, res: express.Re
   try {
     let id: number = +_req.params.id;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.get(id);
 
     res.send(assessment);
@@ -112,7 +112,7 @@ export const uploadAssessmentFiles = async (_req: express.Request, res: express.
   try {
     let id: number = +_req.params.id;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.get(id);
 
     // Create a folder with the UUID inside assessments folder
@@ -144,7 +144,7 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
   try {
     let id: number = +_req.params.id;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.get(id);
 
     // Delete created folder and contents
@@ -167,7 +167,7 @@ export const getAssessmentsInClassroom = async (_req: express.Request, res: expr
   try {
     let classroomId: number = +_req.params.id_classroom;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.getByClassroom(classroomId);
 
     res.send(assessment);
@@ -196,14 +196,14 @@ export const runAssessment = async (_req: express.Request, res: express.Response
     let userEmail: string = '';
     if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
-    let users = await new UserDAO();
+    let users = new UserDAO();
 
     let userID: number = (await users.getByEmail(userEmail)).id;
 
     let id: number = +_req.params.id;
     let sseClientId: string = _req.params.sseClientId;
 
-    let assessments = await new AssessmentDAO();
+    let assessments = new AssessmentDAO();
     let assessment = await assessments.get(id);
 
     // Create a folder with the UUID inside assessments folder
@@ -236,7 +236,7 @@ export const downloadAssessmentFile = async (_req: express.Request, res: express
   try {
     let id: number = +_req.params.id;
 
-    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentExecution = new AssessmentExecutionDAO();
     let assessmentRun = await assessmentExecution.get(id);
 
     let assessmentFilePath = path.join(process.env.COMMON_FOLDER!, environment.folders.assessments, assessmentRun.executionID, "assessment.zip");
@@ -258,11 +258,11 @@ export const getAssessmentsRunInfoByUser = async (_req: express.Request, res: ex
     let userEmail: string = '';
     if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
-    let users = await new UserDAO();
+    let users = new UserDAO();
 
     let userID: number = (await users.getByEmail(userEmail)).id;
 
-    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentExecution = new AssessmentExecutionDAO();
 
     let assessmentRuns = await assessmentExecution.getByUserID(assessmentID, userID);
 
@@ -278,8 +278,21 @@ export const getAssessmentRunInfo = async (_req: express.Request, res: express.R
   try {
     let id: number = +_req.params.id;
 
-    let assessmentExecution = await new AssessmentExecutionDAO();
+    let assessmentExecution = new AssessmentExecutionDAO();
     let assessmentRun = await assessmentExecution.get(id);
+
+    res.send(assessmentRun);
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
+export const getAllAssessmentsRunInfo = async (_req: express.Request, res: express.Response) => {
+  try {
+    let assessmentExecution = new AssessmentExecutionDAO();
+    let assessmentRun = await assessmentExecution.getAllLatestExecutions();
 
     res.send(assessmentRun);
   }

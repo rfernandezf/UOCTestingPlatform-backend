@@ -26,7 +26,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       let body: ClassroomRequest = _req.body;
 
       let classroom = new Classroom(0, body.name, body.description, body.password);
-      let classrooms = await new ClassroomDAO();
+      let classrooms = new ClassroomDAO();
       classroom = await classrooms.create(classroom);
       res.send(classroom);
     }
@@ -46,7 +46,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
       let id: number = +_req.params.id;
 
       let classroom = new Classroom(id, body.name, body.description, body.password);
-      let Classrooms = await new ClassroomDAO();
+      let Classrooms = new ClassroomDAO();
       classroom = await Classrooms.update(classroom);
       res.send(classroom);
     }
@@ -60,7 +60,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
     try {
       let id: number = +_req.params.id;
 
-      let classrooms = await new ClassroomDAO();
+      let classrooms = new ClassroomDAO();
       await classrooms.delete(id);
 
       res.send();
@@ -75,7 +75,7 @@ export const getClassrooms = async (_req: express.Request, res: express.Response
     try {
       let id: any = _req.params.id;
 
-      let classrooms = await new ClassroomDAO();
+      let classrooms = new ClassroomDAO();
       let classroom: Classroom;
 
       if(!isNaN(Number(id))) classroom = await classrooms.get(id);

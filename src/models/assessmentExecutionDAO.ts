@@ -1,5 +1,5 @@
 import { AssessmentExecution } from "@controllers/assessmentExecutionController";
-import { AssessmentExecutionResponse } from "@interfaces/assessmentExecution";
+import { AllAssessmentExecutions as AssessmentLatestExecution, AllAssessmentExecutionsResponse as AssessmentLatestsExecutionResponse, AssessmentExecutionResponse } from "@interfaces/assessmentExecution";
 import { DAO } from "@interfaces/DAO";
 import dbConnection from "@utils/dbConnection";
 import { dateToEpoch, epochToDate } from "@utils/dbUtils";
@@ -97,6 +97,40 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
 
                 rows.forEach((row: AssessmentExecutionResponse) => {
                     response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.execution_time, row.log_output, row.execution_id));
+                })
+
+                if(response && response.length > 0) resolve(response);
+                else reject(new Error('ELEMENT_NOT_FOUND'));
+            });
+        });
+    }
+
+    getAllLatestExecutions(): Promise<Array<AssessmentLatestExecution>> {
+        return new Promise(async (resolve, reject) => {
+            (await this.db).all(
+                'SELECT assessment_id, assessment_name, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
+                'SELECT a.id AS assessment_id, a.name AS assessment_name, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
+                'ROW_NUMBER() OVER (PARTITION BY a.id ORDER BY ae.execution_date DESC) AS row_num ' +
+                'FROM AssessmentExecutions ae, Assessments a, Users u, Classrooms c ' +
+                'WHERE ae.assessment_id = a.id AND ae.user_id = u.id AND a.classroom_id = c.id) AS ranked ' +
+                'WHERE row_num = 1 ORDER BY execution_date DESC;', 
+                function(err: Error | null, rows: Array<AssessmentLatestsExecutionResponse>) { 
+                if(err) reject(err);
+
+                let response: Array<AssessmentLatestExecution> = [];
+
+                rows.forEach((row: AssessmentLatestsExecutionResponse) => {
+                    let parsedRow: AssessmentLatestExecution = {
+                        assessment_id: row.assessment_id,
+                        assessment_name: row.assessment_name,
+                        user_id: row.user_id,
+                        email: row.email,
+                        classroom_name: row.classroom_name,
+                        execution_date: epochToDate(row.execution_date),
+                        passed_tests: row.passed_tests,
+                        failed_tests: row.failed_tests
+                    };
+                    response.push(parsedRow);
                 })
 
                 if(response && response.length > 0) resolve(response);

@@ -29,7 +29,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let body: ExecutionPlatformRequest = _req.body;
 
       let executionPlatform = new ExecutionPlatform(0, body.name);
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       executionPlatform = await executionPlatforms.create(executionPlatform);
 
       // Create a folder for the new platform
@@ -55,7 +55,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let id: number = +_req.params.id;
 
       let executionPlatform = new ExecutionPlatform(id, body.name);
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       let oldExecutionPlatform = await executionPlatforms.get(id);
       executionPlatform = await executionPlatforms.update(executionPlatform);
 
@@ -81,7 +81,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     try {
       let id: number = +_req.params.id;
 
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       let executionPlatform = await executionPlatforms.get(id);
       
       // Delete created folder and contents
@@ -103,7 +103,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     try {
       let id: number = +_req.params.id;
 
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       let executionPlatform = await executionPlatforms.get(id);
 
       res.send(executionPlatform);
@@ -118,7 +118,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
     try {
       let id: number = +_req.params.id;
 
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       let executionPlatform = await executionPlatforms.get(id);
 
       // Check for script existence
@@ -142,7 +142,7 @@ export const getPlatforms = async (_req: express.Request, res: express.Response)
       let body: string = _req.body;
       let id: number = +_req.params.id;
 
-      let executionPlatforms = await new ExecutionPlatformDAO();
+      let executionPlatforms = new ExecutionPlatformDAO();
       let executionPlatform : ExecutionPlatform = await executionPlatforms.get(id);
 
       // Create a folder for the new platform if it doesn't exists
