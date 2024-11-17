@@ -115,7 +115,11 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
           .finally(() => {
             if((user as User).name == '' || (user as User).surnames == '') missingUserData = true;
 
-            return res.send({jwt: token, missingUserData});            
+            return res.send({jwt: token, 
+              name: user.name, 
+              surnames: user.surnames, 
+              role: user.userRole, 
+              missingUserData: missingUserData});            
           });
         }
     }
@@ -134,8 +138,13 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
       try
       {
-        await users.getByEmail(userEmail);
-        return res.send();
+        let user = await users.getByEmail(userEmail);
+        return res.send({
+          email: user.email,
+          name: user.name, 
+          surnames: user.surnames, 
+          role: user.userRole
+        });
       } catch(err) {
         return res.status(401).send();
       }
