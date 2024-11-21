@@ -128,7 +128,8 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
                         classroom_name: row.classroom_name,
                         execution_date: epochToDate(row.execution_date),
                         passed_tests: row.passed_tests,
-                        failed_tests: row.failed_tests
+                        failed_tests: row.failed_tests,
+                        status: row.passed_tests > 0 && row.failed_tests == 0 ? 'Success' : 'Failed'
                     };
                     response.push(parsedRow);
                 })

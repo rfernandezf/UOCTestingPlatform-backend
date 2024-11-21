@@ -30,4 +30,5 @@ export interface AllAssessmentExecutions {
     execution_date: Date,
     passed_tests: number,
     failed_tests: number,
+    status: string,
 }
