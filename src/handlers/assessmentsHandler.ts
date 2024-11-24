@@ -168,11 +168,36 @@ export const deleteAssessmentFiles = async (_req: express.Request, res: express.
 export const getAssessmentsInClassroom = async (_req: express.Request, res: express.Response) => {
   try {
     let classroomId: number = +_req.params.id_classroom;
+    let userEmail: string = '';
+    if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
 
-    let assessments = new AssessmentDAO();
-    let assessment = await assessments.getByClassroom(classroomId);
+    let users = new UserDAO();
+    let userID: number = (await users.getByEmail(userEmail)).id;
 
-    res.send(assessment);
+    let assessmentDAO = new AssessmentDAO();
+    let assessments: Array<any> = await assessmentDAO.getByClassroom(classroomId);
+
+    // Check if the assessment for the user making the request is completed or not
+    let assessmentExecutions = new AssessmentExecutionDAO();
+
+    for(const assessment of assessments)
+    {
+      try
+      {
+        const executions = await assessmentExecutions.getByUserID(assessment.id, userID);
+        const lastExecution = executions[executions.length -1];
+  
+        // Workaround: Fake the response for adding the status to the object
+        assessment.status = lastExecution.passedTests > 0 && lastExecution.failedTests == 0 ? 'SUCCESS' : 'FAILED';
+      }
+
+      catch(err: any)
+      {
+        assessment.status = 'FAILED';
+      }
+    }
+    
+    res.send(assessments);
   }
   catch(err: any) {
     let error: CustomHTTPError = parseErrorCode(err);
