@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { environment } from '@utils/environment';
 import { UserDAO } from '@models/userDAO';
 import { User } from '@controllers/userController';
+import { generateEmailTemplate } from './emailTemplate';
 
 export const requestPasscode = async (_req: express.Request, res: express.Response) => {
     try {
@@ -41,29 +42,44 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
         // Send the token through email
         let transporter = nodemailer.createTransport({
-          service: 'gmail',
+          service: process.env.NODEMAILER_SERVICE,
           auth: {
-            user: 'uoctestingplatform@gmail.com',
-            pass: ''
+            user: process.env.NODEMAILER_USER,
+            pass: process.env.NODEMAILER_PASSWORD
           }
         });
 
-        let mailOptions = {
+        let mailOptions: any;
+
+        if(process.env.ENABLE_EMAIL_SENDING == 'false')
+        {
+          mailOptions = {
             from: 'UOC Testing Platform',
             to: body.email,
             subject: 'Login passcode',
-            text: 'Your login passcode: ' + passcode
+            text: 'Your passcode: ' + passcode
           };
 
-        console.log('----> MAIL TO SEND: ', mailOptions)
+          console.log('----> MAIL TO SEND: ', mailOptions)
+        }
 
-        // transporter.sendMail(mailOptions, function(error, info){
-        //     if (error) {
-        //       console.log('Error: ', error);
-        //     } else {
-        //       console.log('Email sent: ' + info.response);
-        //     }
-        //   });
+        else
+        {
+          mailOptions = {
+            from: 'UOC Testing Platform',
+            to: body.email,
+            subject: 'Login passcode',
+            html: generateEmailTemplate(body.email, passcode)
+          };
+
+          transporter.sendMail(mailOptions, function(error, info){
+              if (error) {
+                console.log('Error: ', error);
+              } else {
+                console.log('Email sent: ' + info.response);
+              }
+            });
+        }
 
         res.send();
     }
