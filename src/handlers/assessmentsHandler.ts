@@ -321,10 +321,25 @@ export const getAssessmentRunInfo = async (_req: express.Request, res: express.R
   }
 }
 
-export const getAllAssessmentsRunInfo = async (_req: express.Request, res: express.Response) => {
+export const getAllAssessmentsLatestRunInfo = async (_req: express.Request, res: express.Response) => {
   try {
     let assessmentExecution = new AssessmentExecutionDAO();
     let assessmentRun = await assessmentExecution.getAllLatestExecutions();
+
+    res.send(assessmentRun);
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
+export const getAssessmentAllLatestRunInfo = async (_req: express.Request, res: express.Response) => {
+  try {
+    let id: number = +_req.params.id;
+
+    let assessmentExecution = new AssessmentExecutionDAO();
+    let assessmentRun = await assessmentExecution.getLatestExecutionsByAssessment(id);
 
     res.send(assessmentRun);
   }
