@@ -1,6 +1,6 @@
 import express from 'express';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
-import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
+import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, getUsersInClassroom, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
 import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile, getAllAssessmentsLatestRunInfo, getAssessmentAllLatestRunInfo } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
@@ -37,6 +37,7 @@ router.post('/classrooms', authenticateToken, postClassroom);
 router.get('/classrooms/:id', authenticateToken, getSingleClassroom);
 router.put('/classrooms/:id', authenticateToken, putClassroom);
 router.delete('/classrooms/:id', authenticateToken, deleteClassroom);
+router.get('/classrooms/users/:id', authenticateToken, getUsersInClassroom);
 
 router.get('/assessments', authenticateToken, getAssessments);
 router.post('/assessments', authenticateToken, postAssessment);

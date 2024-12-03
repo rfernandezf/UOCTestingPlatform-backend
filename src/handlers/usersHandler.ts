@@ -126,6 +126,21 @@ export const getUsers = async (_req: express.Request, res: express.Response) => 
     }
   }
 
+  export const getUsersInClassroom = async (_req: express.Request, res: express.Response) => {
+    try {
+      let id: number = +_req.params.id;
+
+      let classrooms2Users = new ClassroomsUsersDAO();
+
+      let users: Array<User> = await classrooms2Users.getUsersInClassroom(id);
+
+      res.send(users);
+    }
+    catch(err: any) {
+      let error: CustomHTTPError = parseErrorCode(err);
+      res.status(error.status).send(error.message);
+    }
+  }
 
   export const postUserToClassroom = async (_req: express.Request, res: express.Response) => {
     try {
