@@ -13,6 +13,7 @@ export interface AssessmentExecutionResponse {
 export interface AllAssessmentExecutionsResponse {
     assessment_id: number,
     assessment_name: string,
+    max_failed_tests: number,
     user_id: number,
     email: string,
     classroom_name: string,

@@ -44,7 +44,15 @@ export const assessmentRequestSchema = {
         },
         "publish_date": {
             "type": "number"
-        }
+        },
+        "max_failed_tests": {
+            "type": "number",
+            "minimum": 0
+        },
+        "max_retries": {
+            "type": "number",
+            "minimum": 0
+        },
     },
     "type": "object"
 }

@@ -108,8 +108,8 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
     getAllLatestExecutions(): Promise<Array<AssessmentLatestExecution>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all(
-                'SELECT assessment_id, assessment_name, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
-                'SELECT a.id AS assessment_id, a.name AS assessment_name, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
+                'SELECT assessment_id, assessment_name, max_failed_tests, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
+                'SELECT a.id AS assessment_id, a.name AS assessment_name, a.max_failed_tests AS max_failed_tests, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
                 'ROW_NUMBER() OVER (PARTITION BY a.id, u.id ORDER BY ae.execution_date DESC) AS row_num ' +
                 'FROM AssessmentExecutions ae, Assessments a, Users u, Classrooms c ' +
                 'WHERE ae.assessment_id = a.id AND ae.user_id = u.id AND a.classroom_id = c.id) AS ranked ' +
@@ -129,7 +129,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
                         execution_date: epochToDate(row.execution_date),
                         passed_tests: row.passed_tests,
                         failed_tests: row.failed_tests,
-                        status: row.passed_tests > 0 && row.failed_tests == 0 ? 'Success' : 'Failed'
+                        status: row.passed_tests > 0 && row.failed_tests <= row.max_failed_tests ? 'Success' : 'Failed'
                     };
                     response.push(parsedRow);
                 })
@@ -143,8 +143,8 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
     getLatestExecutionsByAssessment(assessmentID: number): Promise<Array<AssessmentLatestExecution>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all(
-                'SELECT assessment_id, assessment_name, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
-                'SELECT a.id AS assessment_id, a.name AS assessment_name, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
+                'SELECT assessment_id, assessment_name, max_failed_tests, user_id, email, classroom_name, execution_date, passed_tests, failed_tests FROM (' +
+                'SELECT a.id AS assessment_id, a.name AS assessment_name, a.max_failed_tests AS max_failed_tests, u.id AS user_id, u.email, c.name AS classroom_name, ae.execution_date, ae.passed_tests, ae.failed_tests, ' + 
                 'ROW_NUMBER() OVER (PARTITION BY a.id, u.id ORDER BY ae.execution_date DESC) AS row_num ' +
                 'FROM AssessmentExecutions ae, Assessments a, Users u, Classrooms c ' +
                 'WHERE ae.assessment_id = a.id AND ae.user_id = u.id AND a.classroom_id = c.id AND ae.assessment_id = ?) AS ranked ' +
@@ -164,7 +164,7 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
                         execution_date: epochToDate(row.execution_date),
                         passed_tests: row.passed_tests,
                         failed_tests: row.failed_tests,
-                        status: row.passed_tests > 0 && row.failed_tests == 0 ? 'Success' : 'Failed'
+                        status: row.passed_tests > 0 && row.failed_tests <= row.max_failed_tests ? 'Success' : 'Failed'
                     };
                     response.push(parsedRow);
                 })
