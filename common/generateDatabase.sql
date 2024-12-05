@@ -23,6 +23,8 @@ CREATE TABLE Assessments (
 	classroom_id INTEGER,
 	test_path TEXT NOT NULL,
 	file_name TEXT NOT NULL,
+	max_failed_tests INTEGER,
+	max_retries INTEGER,
 	FOREIGN KEY(platform_id) REFERENCES ExecutionPlatforms(id),
 	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id)
 );

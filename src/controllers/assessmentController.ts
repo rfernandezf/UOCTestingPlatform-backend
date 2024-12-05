@@ -11,8 +11,10 @@ export class Assessment
     private _classroomID: number;
     private _testPath: string;
     private _fileName: string;
+    private _maxFailedTests: number;
+    private _maxRetries: number;
 
-    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string = '', fileName: string = '') 
+    constructor(id: number, name: string, description: string, publishDate: Date, expirationDate: Date, executionPlatformID: number, classroomID: number, testPath: string = '', fileName: string = '', maxFailedTests: number = 0, maxRetries: number = 0) 
     {
       this._id = id;
       this._name = name;
@@ -23,6 +25,8 @@ export class Assessment
       this._classroomID = classroomID;
       this._testPath = testPath;
       this._fileName = fileName;
+      this._maxFailedTests = maxFailedTests;
+      this._maxRetries = maxRetries;
     }
 
     get id(): number
@@ -70,6 +74,16 @@ export class Assessment
         return this._fileName;
     }
 
+    get maxFailedTests(): number
+    {
+        return this._maxFailedTests;
+    }
+
+    get maxRetries(): number
+    {
+        return this._maxRetries;
+    }
+
     set id(id: number)
     {
         this._id = id;
@@ -115,4 +129,13 @@ export class Assessment
         this._fileName = fileName;
     }
 
+    set maxFailedTests(maxFailedTests: number)
+    {
+        this._maxFailedTests = maxFailedTests;
+    }
+
+    set maxRetries(maxRetries: number)
+    {
+        this._maxRetries = maxRetries;
+    }
 }

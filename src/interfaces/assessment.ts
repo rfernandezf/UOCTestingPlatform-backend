@@ -7,7 +7,9 @@ export interface AssessmentResponse {
     platform_id: number,
     classroom_id: number,
     test_path: string,
-    file_name: string
+    file_name: string,
+    max_failed_tests: number,
+    max_retries: number
 }
 
 export interface AssessmentRequest {
@@ -16,7 +18,9 @@ export interface AssessmentRequest {
     publish_date: number,
     expiration_date: number,
     platform_id: number,
-    classroom_id: number
+    classroom_id: number,
+    max_failed_tests: number,
+    max_retries: number
 }
 
 export const assessmentRequestSchema = {
