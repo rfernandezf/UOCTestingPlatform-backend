@@ -68,36 +68,43 @@ export class TestExecution
     {
         return new Promise(async (resolve, reject) => {
             // Uncompress the file and delete the zip
-            yauzl.open(zipFilePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
-                if (err) throw err;
-                zipfile.readEntry();
-                zipfile.on("entry", function(entry: any) {
-                if (/\/$/.test(entry.fileName)) {
-                    // Directory file names end with '/'.
-                    // Note that entries for directories themselves are optional.
-                    // An entry's fileName implicitly requires its parent directories to exist.
-                    if (!fs.existsSync(path.join(extractionPath, entry.fileName))){
-                    fs.mkdirSync(path.join(extractionPath, entry.fileName), { recursive: true });
-                    }
+            try
+            {
+                yauzl.open(zipFilePath, {lazyEntries: true}, function(err: Error | null, zipfile: yauzl.ZipFile) {
+                    if (err) return reject(err);
                     zipfile.readEntry();
-                } 
-                else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
-                else {
-                    // file entry
-                    zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
-                    if (err) throw err;                
-                    
-                    var fileStream = fs.createWriteStream(path.join(extractionPath, entry.fileName));
-                    readStream.pipe(fileStream);
-
-                    readStream.on("end", function() {
+                    zipfile.on("entry", function(entry: any) {
+                    if (/\/$/.test(entry.fileName)) {
+                        // Directory file names end with '/'.
+                        // Note that entries for directories themselves are optional.
+                        // An entry's fileName implicitly requires its parent directories to exist.
+                        if (!fs.existsSync(path.join(extractionPath, entry.fileName))){
+                        fs.mkdirSync(path.join(extractionPath, entry.fileName), { recursive: true });
+                        }
                         zipfile.readEntry();
-                    });
+                    } 
+                    else if(/^(__MACOSX\/).*$/.test(entry.fileName)) zipfile.readEntry();
+                    else {
+                        // file entry
+                        zipfile.openReadStream(entry, function(err: Error | null, readStream: any) {
+                        if (err) return reject(err);         
+                        
+                        var fileStream = fs.createWriteStream(path.join(extractionPath, entry.fileName));
+                        readStream.pipe(fileStream);
 
+                        readStream.on("end", function() {
+                            zipfile.readEntry();
+                        });
+
+                        });
+                    }
                     });
-                }
                 });
-            });
+            } catch(err)
+            {
+                console.log('----> CATCHED!!!: ', err)
+                reject(err);
+            }
 
             // Delete the zip file
             if (deleteZip && fs.existsSync(zipFilePath)){
@@ -125,7 +132,7 @@ export class TestExecution
 
                     let receivedDataBuffer: string = '';
                     let result: Array<ExecutionScriptResponse> = [];
-                
+                    
                     proc.stdout.on('data', (data: Buffer) => {
                         receivedDataBuffer += data.toString();
 

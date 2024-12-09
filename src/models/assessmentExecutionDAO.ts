@@ -88,6 +88,23 @@ export class AssessmentExecutionDAO implements DAO<AssessmentExecution>
         });
     }
 
+    getByAssessment(assessmentID: number): Promise<Array<AssessmentExecution>> {
+        return new Promise(async (resolve, reject) => {
+            (await this.db).all('SELECT * FROM AssessmentExecutions WHERE assessment_id = ? ORDER BY execution_date ASC', assessmentID, function(err: Error | null, rows: Array<AssessmentExecutionResponse>) { 
+                if(err) reject(err);
+
+                let response: Array<AssessmentExecution> = [];
+
+                rows.forEach((row: AssessmentExecutionResponse) => {
+                    response.push(new AssessmentExecution(row.id, row.assessment_id, row.user_id, epochToDate(row.execution_date), row.passed_tests, row.failed_tests, row.execution_time, row.log_output, row.execution_id));
+                })
+
+                if(response && response.length > 0) resolve(response);
+                else reject(new Error('ELEMENT_NOT_FOUND'));
+            });
+        });
+    }
+
     getAll(): Promise<Array<AssessmentExecution>> {
         return new Promise(async (resolve, reject) => {
             (await this.db).all('SELECT * FROM AssessmentExecutions', function(err: Error | null, rows: Array<AssessmentExecutionResponse>) { 

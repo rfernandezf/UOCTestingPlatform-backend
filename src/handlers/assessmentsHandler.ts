@@ -278,6 +278,23 @@ export const downloadAssessmentFile = async (_req: express.Request, res: express
   }
 }
 
+export const getAssessmentsRunInfo = async (_req: express.Request, res: express.Response) => {
+  try {
+    let assessmentID: number = +_req.params.id;
+
+    let assessmentExecution = new AssessmentExecutionDAO();
+    let assessmentRuns: Array<AssessmentExecution> = [];
+
+    assessmentRuns = await assessmentExecution.getByAssessment(assessmentID);
+
+    res.send(assessmentRuns);
+  }
+  catch(err: any) {
+    let error: CustomHTTPError = parseErrorCode(err);
+    res.status(error.status).send(error.message);
+  }
+}
+
 export const getAssessmentsRunInfoByUser = async (_req: express.Request, res: express.Response) => {
   try {
     let assessmentID: number = +_req.params.id;
