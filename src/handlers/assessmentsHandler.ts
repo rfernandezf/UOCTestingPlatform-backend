@@ -62,9 +62,12 @@ export const putAssessment = async (_req: express.Request, res: express.Response
     let body: AssessmentRequest = _req.body;
     let id: number = +_req.params.id;
 
-    let assessment = new Assessment(id, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, '', '', body.max_failed_tests, body.max_retries);
-    let Assessments = new AssessmentDAO();
-    assessment = await Assessments.update(assessment);
+    let assessments = new AssessmentDAO();
+    let oldAssessment = await assessments.get(id);
+
+    let assessment = new Assessment(id, body.name, body.description, epochToDate(body.publish_date), epochToDate(body.expiration_date), body.platform_id, body.classroom_id, oldAssessment.testPath, oldAssessment.fileName, body.max_failed_tests, body.max_retries);
+   
+    assessment = await assessments.update(assessment);
     res.send(assessment);
   }
   catch(err: any) {
