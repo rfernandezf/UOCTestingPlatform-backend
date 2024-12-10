@@ -188,7 +188,7 @@ export const getAssessmentsInClassroom = async (_req: express.Request, res: expr
         const lastExecution = executions[executions.length -1];
   
         // Workaround: Fake the response for adding the status to the object
-        assessment.status = lastExecution.passedTests > 0 && lastExecution.failedTests == 0 ? 'SUCCESS' : 'FAILED';
+        assessment._status = lastExecution.passedTests > 0 && lastExecution.failedTests <= assessment._maxFailedTests ? 'SUCCESS' : 'FAILED';
       }
 
       catch(err: any)
