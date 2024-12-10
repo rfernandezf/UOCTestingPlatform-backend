@@ -25,8 +25,8 @@ CREATE TABLE Assessments (
 	file_name TEXT NOT NULL,
 	max_failed_tests INTEGER,
 	max_retries INTEGER,
-	FOREIGN KEY(platform_id) REFERENCES ExecutionPlatforms(id),
-	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id)
+	FOREIGN KEY(platform_id) REFERENCES ExecutionPlatforms(id) ON DELETE CASCADE,
+	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id) ON DELETE CASCADE
 );
 
 CREATE TABLE AssessmentExecutions (
@@ -39,8 +39,8 @@ CREATE TABLE AssessmentExecutions (
 	execution_time INTEGER NOT NULL,
 	log_output TEXT NOT NULL,
 	execution_id TEXT NOT NULL,
-	FOREIGN KEY(assessment_id) REFERENCES Assessments(id),
-	FOREIGN KEY(user_id) REFERENCES Users(id)
+	FOREIGN KEY(assessment_id) REFERENCES Assessments(id) ON DELETE CASCADE,
+	FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Classrooms (
@@ -62,15 +62,15 @@ CREATE TABLE Users (
 	surnames TEXT NOT NULL,
 	email TEXT UNIQUE NOT NULL,
 	role_id INTEGER,
-	FOREIGN KEY(role_id) REFERENCES UserRoles(id)
+	FOREIGN KEY(role_id) REFERENCES UserRoles(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Classrooms_2_users (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	classroom_id INTEGER,
 	user_id INTEGER,
-	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id),
-	FOREIGN KEY(user_id) REFERENCES Users(id),
+	FOREIGN KEY(classroom_id) REFERENCES Classrooms(id) ON DELETE CASCADE,
+	FOREIGN KEY(user_id) REFERENCES Users(id) ON DELETE CASCADE,
 	CONSTRAINT unique_pair UNIQUE(classroom_id, user_id)
 );
 

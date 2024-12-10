@@ -53,7 +53,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 4,
-                classroom_id: 3
+                classroom_id: 3,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             let mockAssessment = new Assessment(
@@ -95,7 +97,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 4,
-                classroom_id: 3
+                classroom_id: 3,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             const response = await request(app).post('/api/v1/assessments').send(assessmentRequest);
@@ -109,7 +113,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 40,
-                classroom_id: 3
+                classroom_id: 3,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             const response = await request(app).post('/api/v1/assessments').send(assessmentRequest);
@@ -123,7 +129,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 4,
-                classroom_id: 30
+                classroom_id: 30,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             const response = await request(app).post('/api/v1/assessments').send(assessmentRequest);
@@ -155,7 +163,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 4,
-                classroom_id: 3
+                classroom_id: 3,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             mockAssessments[2].name = 'Java assessment edited';
@@ -175,7 +185,9 @@ describe('API REST - /api/v1/assessments', () => {
                 publish_date: dateToEpoch(new Date()),
                 expiration_date: dateToEpoch(new Date()),
                 platform_id: 4,
-                classroom_id: 3
+                classroom_id: 3,
+                max_failed_tests: 0,
+                max_retries: 0
             }
 
             const response = await request(app).put('/api/v1/assessments/40').send(assessmentRequest);
