@@ -2,7 +2,7 @@ import express from 'express';
 import { deletePlatform, getPlatforms, getPlatformScript, getSinglePlatform, postPlatform, putPlatform, putPlatformScript } from '@handlers/platformsHandler';
 import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getClassroomsInUser, getClassroomsInUserJWT, getSingleUser, getUsers, getUsersInClassroom, postUser, postUserToClassroom, postUserToClassroomJWT, putUser } from '@handlers/usersHandler';
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
-import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile, getAllAssessmentsLatestRunInfo, getAssessmentAllLatestRunInfo, getAssessmentsRunInfo } from '@handlers/assessmentsHandler';
+import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile, getAllAssessmentsLatestRunInfo, getAssessmentAllLatestRunInfo, getAssessmentsRunInfo, deleteAssessmentRunInfo } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
 import { authenticateToken } from '@middlewares/authHeader';
 const multer = require('multer');
@@ -52,6 +52,7 @@ router.get('/assessments/:id/run/', authenticateToken, getAssessmentsRunInfoByUs
 router.get('/assessments/:id/run/all', authenticateToken, getAssessmentsRunInfo);
 router.get('/assessments/:id/run/latest', authenticateToken, getAssessmentAllLatestRunInfo);
 router.get('/assessments/run/:id', authenticateToken, getAssessmentRunInfo);
+router.delete('/assessments/run/:id', authenticateToken, deleteAssessmentRunInfo);
 router.get('/assessments/run/:id/download', authenticateToken, downloadAssessmentFile);
 router.post('/assessments/:id/run/:sseClientId', authenticateToken, multer().single('file'), runAssessment);
 
