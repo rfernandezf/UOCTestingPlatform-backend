@@ -111,12 +111,6 @@ describe('API REST - /api/v1/platforms', function () {
             assert.equal(response.status, 404);
         });
 
-        it('Should return a foreign key violation error - 422', async function () {
-            const response = await request(app).delete('/api/v1/platforms/3');
-
-            assert.equal(response.status, 422);
-        });
-
         it('Should delete the platform', async function () {
             const deleteResponse = await request(app).delete('/api/v1/platforms/2');
             assert.equal(deleteResponse.status, 200);

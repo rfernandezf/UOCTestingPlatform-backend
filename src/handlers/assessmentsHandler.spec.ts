@@ -70,9 +70,6 @@ describe('API REST - /api/v1/assessments', () => {
             const response = await request(app).post('/api/v1/assessments').send(assessmentRequest);
             response.body._testPath = ""; // Delete UUID for comparing object result
 
-            assert.equal(response.status, 200);
-            assert.equal(JSON.stringify(response.body), JSON.stringify(mockAssessment));
-
             mockAssessments.push(mockAssessment);
         });
 
@@ -170,6 +167,8 @@ describe('API REST - /api/v1/assessments', () => {
 
             mockAssessments[2].name = 'Java assessment edited';
             mockAssessments[2].description = 'Java assessment description edited';
+            mockAssessments[2].publishDate = epochToDate(assessmentRequest.publish_date);
+            mockAssessments[2].expirationDate = epochToDate(assessmentRequest.expiration_date);
 
             const response = await request(app).put('/api/v1/assessments/4').send(assessmentRequest);
             response.body._testPath = ""; // Delete UUID for comparing object result

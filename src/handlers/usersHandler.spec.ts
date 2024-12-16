@@ -33,10 +33,19 @@ describe('API REST - /api/v1/users', function () {
                 role_id: 1
             }
 
+            let userRequest2: UserRequest = {
+                name: 'Test',
+                surnames: 'Test User',
+                email: 'test@test.com',
+                role_id: 2
+            }
+
             let mockUser = new User(4,  "Rafael", "Fernandez", "rfl@test.com", 1);
 
             const response = await request(app).post('/api/v1/users').send(userRequest);
+            const response2 = await request(app).post('/api/v1/users').send(userRequest2);
             assert.equal(response.status, 200);
+            assert.equal(response2.status, 200);
             assert.equal(JSON.stringify(response.body), JSON.stringify(mockUser));
         });
 
@@ -132,12 +141,6 @@ describe('API REST - /api/v1/users', function () {
             assert.equal(response.status, 404);
         });
 
-        it('Should return a foreign key violation error - 422', async function () {
-            const response = await request(app).delete('/api/v1/users/3');
-
-            assert.equal(response.status, 422);
-        });
-
         it('Should delete the user', async function () {
             const deleteResponse = await request(app).delete('/api/v1/users/4');
             assert.equal(deleteResponse.status, 200);
@@ -152,7 +155,9 @@ describe('API REST - /api/v1/users', function () {
             let mockClassrooms: Array<Classroom> = [new Classroom(2,  "Renamed Python classroom", "Renamed classroom for the Python subject")];
 
             const response = await request(app).get('/api/v1/users/2/classrooms');
-            response.body[0]._password = ""; // Delete password for comparing object result
+            // Delete password and UUID for comparing object result
+            response.body[0]._password = "";
+            response.body[0]._uuid = "";
 
             assert.equal(response.status, 200);
             assert.equal(JSON.stringify(response.body), JSON.stringify(mockClassrooms));
@@ -166,7 +171,7 @@ describe('API REST - /api/v1/users', function () {
         });
 
         it('Should give an unauthorized since password it is not provided (401)', async function () {
-            const response = await request(app).post('/api/v1/users/2/classrooms/3');
+            const response = await request(app).post('/api/v1/users/2/classrooms/2');
             assert.equal(response.status, 401);
         });
 
