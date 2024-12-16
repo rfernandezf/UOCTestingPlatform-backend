@@ -10,7 +10,7 @@ var assert = require('assert');
 
 describe('API REST - /api/v1/platforms', function () {
 
-    let javaPlatformScript: string = `#!/bin/bash\n\ngradle clean test | awk '/[a-zA-Z0-9]* > [a-zA-Z0-9]*.* ((PASSED)|(FAILED))/ { printf "{\"name\": \"%s\", \"method\": \"%s\", \"status\": \"%s\"}" , $1, $3, $NF; fflush() }'`;
+    let javaPlatformScript: string = `#!/bin/bash\n\ngradle clean test | awk '/[a-zA-Z0-9]* > [a-zA-Z0-9]*.* ((PASSED)|(FAILED))/ { printf "{\\"name\\": \\"%s\\", \\"method\\": \\"%s\\", \\"status\\": \\"%s\\"}" , $1, $3, $NF; fflush() }'`;
 
     afterEach(() => { server.close(); })
       

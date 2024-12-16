@@ -16,7 +16,7 @@ export class ClassroomDAO implements DAO<Classroom>
             let classroomUUID: string = uuidv4();
 
             (await this.db).run("INSERT INTO Classrooms (name, description, password, uuid) VALUES (?, ?, ?, ?)", [entity.name, entity.description, entity.password, classroomUUID], function (this: RunResult, err: Error | null) { 
-                if(this.lastID) entity.id = this.lastID;
+                if(this && this.lastID) entity.id = this.lastID;
                 entity.uuid = classroomUUID;
 
                 if(err) reject(err);

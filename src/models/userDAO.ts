@@ -13,7 +13,7 @@ export class UserDAO implements DAO<User>
     create(entity: User): Promise<User> {
         return new Promise(async (resolve, reject) => {
             (await this.db).run("INSERT INTO Users (name, surnames, email, role_id) VALUES (?, ?, ?, ?)", [entity.name, entity.surnames, entity.email, entity.userRole], function (this: RunResult, err: Error | null) { 
-                if(this.lastID) entity.id = this.lastID;
+                if(this && this.lastID) entity.id = this.lastID;
 
                 if(err) reject(err);
 

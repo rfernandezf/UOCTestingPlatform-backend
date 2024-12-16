@@ -13,7 +13,7 @@ export class ExecutionPlatformDAO implements DAO<ExecutionPlatform>
     create(entity: ExecutionPlatform): Promise<ExecutionPlatform> {
         return new Promise(async (resolve, reject) => {
             (await this.db).run("INSERT INTO ExecutionPlatforms (name, internal_name) VALUES (?, ?)", [entity.name, entity.internalName], function (this: RunResult, err: Error | null) { 
-                if(this.lastID) 
+                if(this && this.lastID) 
                 {
                     entity.id = this.lastID;
                 }

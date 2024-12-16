@@ -18,7 +18,7 @@ export class AssessmentDAO implements DAO<Assessment>
 
             (await this.db).run("INSERT INTO Assessments (name, description, publish_date, expiration_date, platform_id, classroom_id, test_path, file_name, max_failed_tests, max_retries) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
                 [entity.name, entity.description, dateToEpoch(entity.publishDate), dateToEpoch(entity.expirationDate), entity.executionPlatformID, entity.classroomID, pathNameUUID, entity.fileName, entity.maxFailedTests, entity.maxRetries], function (this: RunResult, err: Error | null) { 
-                if(this.lastID) 
+                if(this && this.lastID) 
                 {
                     entity.id = this.lastID;
                     entity.testPath = pathNameUUID;
