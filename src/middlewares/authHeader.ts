@@ -1,6 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { msEpochToDate } from '@utils/dbUtils';
+import { UserDAO } from '@models/userDAO';
+import { UserRole } from '@interfaces/user';
+import { CustomHTTPError, parseErrorCode } from '@utils/restUtils';
 
 export const authenticateToken=(_req: express.Request, res: express.Response, next: any)=> {
 
@@ -30,3 +33,20 @@ export const authenticateToken=(_req: express.Request, res: express.Response, ne
         });
     }
   }
+
+export const userRoleTeacher=async (_req: express.Request, res: express.Response, next: any)=> {
+
+    let userEmail: string = '';
+    if(_req.headers['user'] as string) userEmail = _req.headers['user'] as string;
+
+    let users = new UserDAO();
+    let user = await users.getByEmail(userEmail);
+
+    if(user.userRole == UserRole.STUDENT) 
+    {
+        let error: CustomHTTPError = parseErrorCode(new Error("UNAUTHORIZED"));
+        res.status(error.status).send(error.message);
+    }
+
+    else next();
+}

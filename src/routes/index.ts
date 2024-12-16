@@ -4,18 +4,18 @@ import { deleteUser, deleteUserFromClassroom, deleteUserFromClassroomJWT, getCla
 import { deleteClassroom, getClassrooms, getSingleClassroom, postClassroom, putClassroom } from '@handlers/classroomsHandler';
 import { deleteAssessment, deleteAssessmentFiles, getAssessmentsRunInfoByUser, getAssessments, getAssessmentsInClassroom, getSingleAssessment, postAssessment, putAssessment, runAssessment, uploadAssessmentFiles, getAssessmentRunInfo, downloadAssessmentFile, getAllAssessmentsLatestRunInfo, getAssessmentAllLatestRunInfo, getAssessmentsRunInfo, deleteAssessmentRunInfo } from '@handlers/assessmentsHandler';
 import { loginCheck, requestJWTToken, requestPasscode } from '@handlers/authHandler';
-import { authenticateToken } from '@middlewares/authHeader';
+import { authenticateToken, userRoleTeacher } from '@middlewares/authHeader';
 const multer = require('multer');
 
 const router = express.Router();
 
 router.get('/platforms', authenticateToken, getPlatforms);
-router.post('/platforms', authenticateToken, postPlatform);
+router.post('/platforms', authenticateToken, userRoleTeacher, postPlatform);
 router.get('/platforms/:id', authenticateToken, getSinglePlatform);
-router.put('/platforms/:id', authenticateToken, putPlatform);
-router.delete('/platforms/:id', authenticateToken, deletePlatform);
-router.get('/platforms/:id/script', authenticateToken, getPlatformScript);
-router.put('/platforms/:id/script', authenticateToken, putPlatformScript);
+router.put('/platforms/:id', authenticateToken, userRoleTeacher, putPlatform);
+router.delete('/platforms/:id', authenticateToken, userRoleTeacher, deletePlatform);
+router.get('/platforms/:id/script', authenticateToken, userRoleTeacher, getPlatformScript);
+router.put('/platforms/:id/script', authenticateToken, userRoleTeacher, putPlatformScript);
 
 router.get('/users', authenticateToken, getUsers);
 router.post('/users', authenticateToken, postUser);
@@ -30,29 +30,29 @@ router.delete('/users/:id_user/classrooms/:id_classroom', authenticateToken, del
 // Rest of users endpoints
 router.get('/users/:id', authenticateToken, getSingleUser);
 router.put('/users/:id', authenticateToken, putUser);
-router.delete('/users/:id', authenticateToken, deleteUser);
+router.delete('/users/:id', authenticateToken, userRoleTeacher, deleteUser);
 
 router.get('/classrooms', authenticateToken, getClassrooms);
-router.post('/classrooms', authenticateToken, postClassroom);
+router.post('/classrooms', authenticateToken, userRoleTeacher, postClassroom);
 router.get('/classrooms/:id', authenticateToken, getSingleClassroom);
-router.put('/classrooms/:id', authenticateToken, putClassroom);
-router.delete('/classrooms/:id', authenticateToken, deleteClassroom);
+router.put('/classrooms/:id', authenticateToken, userRoleTeacher, putClassroom);
+router.delete('/classrooms/:id', authenticateToken, userRoleTeacher, deleteClassroom);
 router.get('/classrooms/users/:id', authenticateToken, getUsersInClassroom);
 
 router.get('/assessments', authenticateToken, getAssessments);
-router.post('/assessments', authenticateToken, postAssessment);
+router.post('/assessments', authenticateToken, userRoleTeacher, postAssessment);
 router.get('/assessments/run/latest', authenticateToken, getAllAssessmentsLatestRunInfo);
 router.get('/assessments/:id', authenticateToken, getSingleAssessment);
 router.get('/assessments/classrooms/:id_classroom', authenticateToken, getAssessmentsInClassroom);
-router.put('/assessments/:id', authenticateToken, putAssessment);
-router.delete('/assessments/:id', authenticateToken, deleteAssessment);
-router.post('/assessments/:id/files', authenticateToken, multer().single('file'), uploadAssessmentFiles);
-router.delete('/assessments/:id/files', authenticateToken, deleteAssessmentFiles);
+router.put('/assessments/:id', authenticateToken, userRoleTeacher, putAssessment);
+router.delete('/assessments/:id', authenticateToken, userRoleTeacher, deleteAssessment);
+router.post('/assessments/:id/files', authenticateToken, userRoleTeacher, multer().single('file'), uploadAssessmentFiles);
+router.delete('/assessments/:id/files', authenticateToken, userRoleTeacher, deleteAssessmentFiles);
 router.get('/assessments/:id/run/', authenticateToken, getAssessmentsRunInfoByUser);
-router.get('/assessments/:id/run/all', authenticateToken, getAssessmentsRunInfo);
+router.get('/assessments/:id/run/all', authenticateToken, userRoleTeacher, getAssessmentsRunInfo);
 router.get('/assessments/:id/run/latest', authenticateToken, getAssessmentAllLatestRunInfo);
 router.get('/assessments/run/:id', authenticateToken, getAssessmentRunInfo);
-router.delete('/assessments/run/:id', authenticateToken, deleteAssessmentRunInfo);
+router.delete('/assessments/run/:id', authenticateToken, userRoleTeacher, deleteAssessmentRunInfo);
 router.get('/assessments/run/:id/download', authenticateToken, downloadAssessmentFile);
 router.post('/assessments/:id/run/:sseClientId', authenticateToken, multer().single('file'), runAssessment);
 
