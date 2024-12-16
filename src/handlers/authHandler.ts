@@ -10,6 +10,7 @@ import { environment } from '@utils/environment';
 import { UserDAO } from '@models/userDAO';
 import { User } from '@controllers/userController';
 import { generateEmailTemplate } from './emailTemplate';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 export const requestPasscode = async (_req: express.Request, res: express.Response) => {
     try {
@@ -42,12 +43,18 @@ export const requestPasscode = async (_req: express.Request, res: express.Respon
 
         // Send the token through email
         let transporter = nodemailer.createTransport({
+          host: process.env.NODEMAILER_HOST,
+          port: process.env.NODEMAILER_PORT,
+          secure: process.env.NODEMAILER_SECURE,
           service: process.env.NODEMAILER_SERVICE,
           auth: {
             user: process.env.NODEMAILER_USER,
             pass: process.env.NODEMAILER_PASSWORD
-          }
-        });
+          },
+          tls: {
+            rejectUnauthorized: process.env.NODEMAILER_TLS_REJECTUNAUTHORIZED,
+          },
+        }as SMTPTransport.Options);
 
         let mailOptions: any;
 
